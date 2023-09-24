@@ -2,6 +2,7 @@ package ru.bootjava.vote.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+import ru.bootjava.vote.error.DataConflictException;
 import ru.bootjava.vote.error.NotFoundException;
 import ru.bootjava.vote.model.Dish;
 import ru.bootjava.vote.model.MenuItem;
@@ -16,6 +17,6 @@ public interface MenuItemRepository extends BaseRepository<MenuItem> {
 
     default MenuItem getExistedOrBelonged(int dishId, int id) {
         return get(dishId, id).orElseThrow(
-                () -> new NotFoundException("MenuItem id=" + id + " is not exist or doesn't belong to Dish id=" + dishId));
+                () -> new DataConflictException("MenuItem id=" + id + " is not exist or doesn't belong to Dish id=" + dishId));
     }
 }

@@ -1,5 +1,6 @@
 package ru.bootjava.vote.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -19,13 +20,13 @@ public class Dish extends NamedEntity {
 
     @Column(name = "price_in_coins", nullable = false)
     @NotNull
-    @Min(1)
+    @Min(0)
     private Integer priceInCoins;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
-    @NotNull
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Restaurant restaurant;
 
     public Dish(Integer id, String name, int priceInCoins) {
