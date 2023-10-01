@@ -6,15 +6,12 @@ import ru.bootjava.vote.to.RestaurantTo;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @UtilityClass
-public class RestaurantsUtil {
+public class RestaurantsUtil extends ConvertingUtil {
 
     public static List<RestaurantTo> getTos(Collection<Restaurant> restaurants) {
-        return restaurants.stream()
-                .map(RestaurantsUtil::createTo)
-                .collect(Collectors.toList());
+        return convert(restaurants, RestaurantsUtil::createTo);
     }
 
     public static RestaurantTo createTo(Restaurant restaurant) {

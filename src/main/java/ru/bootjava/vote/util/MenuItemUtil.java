@@ -1,17 +1,16 @@
 package ru.bootjava.vote.util;
 
+import lombok.experimental.UtilityClass;
 import ru.bootjava.vote.model.MenuItem;
 import ru.bootjava.vote.to.MenuItemTo;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class MenuItemUtil {
+@UtilityClass
+public class MenuItemUtil extends ConvertingUtil {
     public static List<MenuItemTo> getTos(Collection<MenuItem> menuItems) {
-        return menuItems.stream()
-                .map(MenuItemUtil::createTo)
-                .collect(Collectors.toList());
+        return convert(menuItems, MenuItemUtil::createTo);
     }
 
     public static MenuItemTo createTo(MenuItem menuItem) {

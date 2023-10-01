@@ -1,17 +1,16 @@
 package ru.bootjava.vote.util;
 
+import lombok.experimental.UtilityClass;
 import ru.bootjava.vote.model.Dish;
 import ru.bootjava.vote.to.DishTo;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class DishUtil {
+@UtilityClass
+public class DishUtil extends ConvertingUtil {
     public static List<DishTo> getTos(Collection<Dish> dishes) {
-        return dishes.stream()
-                .map(DishUtil::createTo)
-                .collect(Collectors.toList());
+        return convert(dishes, DishUtil::createTo);
     }
 
     public static DishTo createTo(Dish dish) {
