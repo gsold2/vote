@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -30,17 +29,15 @@ import static ru.bootjava.vote.util.validation.ValidationUtil.checkNew;
 @Slf4j
 @AllArgsConstructor
 public class DishController {
-
     static final String REST_URL = "/api/dishes";
 
     private final DishRepository dishRepository;
-
     private final RestaurantRepository restaurantRepository;
     private final DishService service;
 
     @GetMapping("/{id}")
     public ResponseEntity<Dish> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
-        log.info("get restaurant {} for user {}", id, authUser.id());
+        log.info("get dish {} for user {}", id, authUser.id());
         return ResponseEntity.of(dishRepository.get(authUser.id(), id));
     }
 
@@ -59,7 +56,7 @@ public class DishController {
     }
 
     @GetMapping("/filter")
-    public List<DishTo> getAllByRestaurant(@AuthenticationPrincipal AuthUser authUser, @RequestParam @Nullable int restaurantId) {
+    public List<DishTo> getAllByRestaurant(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull int restaurantId) {
         log.info("getAll for the user {} and restaurant{}", authUser.id(), restaurantId);
         return DishUtil.getTos(dishRepository.getAllByRestaurant(authUser.id(), restaurantId));
     }
@@ -75,7 +72,9 @@ public class DishController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Dish dish, @RequestParam @NonNull int restaurantId) {
+    public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser,
+                                                   @Valid @RequestBody Dish dish,
+                                                   @RequestParam @NonNull int restaurantId) {
         int userId = authUser.id();
         log.info("create {} for restaurant {} by user {}", dish, restaurantId, userId);
         checkNew(dish);

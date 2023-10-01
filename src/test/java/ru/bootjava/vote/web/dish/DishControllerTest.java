@@ -86,17 +86,17 @@ public class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
-        Dish newMeal = getNew();
+        Dish newDish = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(DishController.REST_URL)
                 .param("restaurantId", String.valueOf(RESTAURANT_ID))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newMeal)));
+                .content(JsonUtil.writeValue(newDish)));
 
         Dish created = DISH_MATCHER.readFromJson(action);
         int newId = created.id();
-        newMeal.setId(newId);
-        DISH_MATCHER.assertMatch(created, newMeal);
-        DISH_MATCHER.assertMatch(dishRepository.getExisted(newId), newMeal);
+        newDish.setId(newId);
+        DISH_MATCHER.assertMatch(created, newDish);
+        DISH_MATCHER.assertMatch(dishRepository.getExisted(newId), newDish);
     }
 
     @Test
@@ -106,7 +106,7 @@ public class DishControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DISH_TO_MATCHER.contentJson(getTos(dishes)));
+                .andExpect(DISH_TO_MATCHER.contentJson(getTos(allDishes)));
     }
 
     @Test
@@ -116,7 +116,7 @@ public class DishControllerTest extends AbstractControllerTest {
                 .param("restaurantId", String.valueOf(RESTAURANT_ID)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(DISH_TO_MATCHER.contentJson(DishUtil.getTos(restaurant_1_dishes)));
+                .andExpect(DISH_TO_MATCHER.contentJson(DishUtil.getTos(dishes1)));
     }
 
     @Test

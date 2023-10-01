@@ -1,6 +1,7 @@
 package ru.bootjava.vote.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -37,7 +38,7 @@ public class Restaurant extends NamedEntity {
 
     @Column(name = "offset_time", nullable = false, columnDefinition = "integer default 0")
     @NotNull
-    @Range(min = -23, max = 24)
+    @Range(min = -23, max = 23)
     private Integer offsetTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -56,6 +57,7 @@ public class Restaurant extends NamedEntity {
         this.offsetTime = offsetTime;
     }
 
+    @Schema(hidden = true)
     public LocalTime getLocalTime() {
         return ZonedDateTime.now(ZoneId.of(zoneId)).toLocalTime().plusHours(offsetTime);
     }
