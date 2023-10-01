@@ -7,8 +7,8 @@ import java.time.LocalDate;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
-public class MenuItemTo extends DateTo {
-    public MenuItemTo(Integer id, LocalDate date) {
+public class VoteTo extends DateTo {
+    public VoteTo(Integer id, LocalDate date) {
         super(id, date);
     }
 }
