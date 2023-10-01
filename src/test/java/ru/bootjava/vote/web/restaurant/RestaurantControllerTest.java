@@ -14,6 +14,8 @@ import ru.bootjava.vote.util.JsonUtil;
 import ru.bootjava.vote.web.AbstractControllerTest;
 import ru.bootjava.vote.web.user.UserTestData;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -112,7 +114,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
                 .param("date", "2020-01-30"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(RESTAURANT_TO_MATCHER.contentJson(getTos(restaurants)));
+                .andExpect(RESTAURANT_TO_MATCHER.contentJson(getTos(List.of(restaurant1))));
     }
 
     @Test
