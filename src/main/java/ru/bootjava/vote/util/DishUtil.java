@@ -8,9 +8,9 @@ import java.util.Collection;
 import java.util.List;
 
 @UtilityClass
-public class DishUtil extends ConvertingUtil {
+public class DishUtil {
     public static List<DishTo> getTos(Collection<Dish> dishes) {
-        return convert(dishes, DishUtil::createTo);
+        return Converter.convert(dishes, DishUtil::createTo);
     }
 
     public static DishTo createTo(Dish dish) {

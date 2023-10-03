@@ -8,9 +8,9 @@ import java.util.Collection;
 import java.util.List;
 
 @UtilityClass
-public class MenuItemUtil extends ConvertingUtil {
+public class MenuItemUtil {
     public static List<MenuItemTo> getTos(Collection<MenuItem> menuItems) {
-        return convert(menuItems, MenuItemUtil::createTo);
+        return Converter.convert(menuItems, MenuItemUtil::createTo);
     }
 
     public static MenuItemTo createTo(MenuItem menuItem) {
