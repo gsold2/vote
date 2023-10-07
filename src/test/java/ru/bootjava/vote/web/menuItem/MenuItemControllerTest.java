@@ -16,7 +16,6 @@ import ru.bootjava.vote.util.MenuItemUtil;
 import ru.bootjava.vote.web.AbstractControllerTest;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,7 +113,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
                 .param("date", String.valueOf(menuItem1.getDate())))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MENU_ITEM_TO_MATCHER.contentJson(MenuItemUtil.getTos(menu_items_1)));
+                .andExpect(MENU_ITEM_TO_MATCHER.contentJson(MenuItemUtil.getTos(menuItems1)));
     }
 
     @Test
@@ -177,7 +176,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
                 .andExpect(status().isCreated());
 
         List<MenuItem> created = menuItemRepository.getAllByRestaurantAndDate(ADMIN_ID, RESTAURANT_ID, LocalDate.parse("2023-01-29"));
-        MENU_ITEM_MATCHER.assertMatch(created, menu_items_2);
+        MENU_ITEM_MATCHER.assertMatch(created, menuItems2);
     }
 
     @Test

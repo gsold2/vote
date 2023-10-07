@@ -16,9 +16,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 import ru.bootjava.vote.util.validation.NoHtml;
 
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 
 @Entity
 @Table(name = "restaurant", uniqueConstraints = {@UniqueConstraint(name = "restaurant_idx", columnNames = {"user_id", "name"})})
@@ -58,8 +56,18 @@ public class Restaurant extends NamedEntity {
     }
 
     @Schema(hidden = true)
-    public LocalTime getLocalTime() {
-        return ZonedDateTime.now(ZoneId.of(zoneId)).toLocalTime().plusHours(offsetTime);
+    public LocalTime getTime() {
+        return getLocalDateTime().toLocalTime();
+    }
+
+    @Schema(hidden = true)
+    public LocalDate getDate() {
+        return getLocalDateTime().toLocalDate();
+    }
+
+    @Schema(hidden = true)
+    private LocalDateTime getLocalDateTime() {
+        return ZonedDateTime.now(ZoneId.of(zoneId)).toLocalDateTime().plusHours(offsetTime);
     }
 
     @Override

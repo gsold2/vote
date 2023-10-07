@@ -26,6 +26,8 @@ VALUES ('2020-01-29', 1),
        ('2020-01-29', 3),
        ('2020-01-30', 1);
 
+SET TIME ZONE 'Europe/Moscow';
 INSERT INTO VOTE (user_id, restaurant_id, date)
 VALUES (1, 1, '2020-01-30'),
-       (2, 1, '2020-01-30');
+       (2, 1, '2020-01-30'),
+       (2, 1, now());

@@ -1,5 +1,6 @@
 package ru.bootjava.vote.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -9,7 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 
 @Entity
@@ -21,27 +22,26 @@ public class Vote extends BaseEntity {
 
     @Column(name = "date", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
-    private Date date;
+    private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
-    @NotNull
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Restaurant restaurant;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @NotNull
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private User user;
 
-    public Vote(Integer id, Date date) {
+    public Vote(Integer id, LocalDate date) {
         super(id);
         this.date = date;
     }
 
     @Override
     public String toString() {
-        return "Vote:" + id + '[' + restaurant + ']';
+        return "Vote:" + id + '[' + date + ']';
     }
 }

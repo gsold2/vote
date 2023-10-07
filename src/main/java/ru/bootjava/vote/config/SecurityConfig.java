@@ -60,6 +60,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/restaurants/**").hasRole(Role.ADMIN.name())
                 .requestMatchers("/api/dishes/**").hasRole(Role.ADMIN.name())
                 .requestMatchers("/api/menu-items/**").hasRole(Role.ADMIN.name())
+                .requestMatchers("/api/votes/**").hasRole(Role.USER.name())
                 .requestMatchers(HttpMethod.POST, "/api/profile").anonymous()
                 .requestMatchers("/api/**").authenticated()
                 .and().httpBasic()

@@ -4,7 +4,9 @@ import lombok.experimental.UtilityClass;
 import ru.bootjava.vote.HasId;
 import ru.bootjava.vote.error.IllegalRequestDataException;
 import ru.bootjava.vote.model.Restaurant;
+import ru.bootjava.vote.model.Vote;
 
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Set;
 
