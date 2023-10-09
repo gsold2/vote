@@ -1,11 +1,11 @@
 package ru.bootjava.vote.web.vote;
 
+
 import ru.bootjava.vote.model.Vote;
 import ru.bootjava.vote.to.VoteTo;
 import ru.bootjava.vote.web.MatcherFactory;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -35,7 +35,6 @@ public class VoteTestData {
     }
 
     private static LocalDate getDate() {
-        ZoneId tz = ZoneId.of("Europe/Moscow");
-        return ZonedDateTime.now(tz).toLocalDate();
+        return ZonedDateTime.now().toLocalDateTime().toLocalDate();
     }
 }

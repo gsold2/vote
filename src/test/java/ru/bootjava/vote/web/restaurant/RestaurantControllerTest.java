@@ -120,7 +120,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
-        Restaurant invalid = new Restaurant(null, null, null, -24);
+        Restaurant invalid = new Restaurant(null, null);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
@@ -131,7 +131,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalid() throws Exception {
-        Restaurant invalid = new Restaurant(RESTAURANT_ID, null, null, 24);
+        Restaurant invalid = new Restaurant(RESTAURANT_ID, null);
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
@@ -142,7 +142,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateHtmlUnsafe() throws Exception {
-        Restaurant invalid = new Restaurant(RESTAURANT_ID, "<script>alert(123)</script>", "<script>alert(123)</script>", 0);
+        Restaurant invalid = new Restaurant(RESTAURANT_ID, "<script>alert(123)</script>");
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
@@ -172,27 +172,5 @@ public class RestaurantControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
                 .andExpect(status().isConflict());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void createWithInvalidZoneId() throws Exception {
-        Restaurant invalid = new Restaurant(null, "invalid_restaurant", "dummy", 0);
-        perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void createWithInvalidOffsetTime() throws Exception {
-        Restaurant invalid = new Restaurant(null, "invalid_restaurant", "Europe/Moscow", 24);
-        perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
     }
 }

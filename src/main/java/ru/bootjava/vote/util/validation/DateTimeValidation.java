@@ -10,7 +10,8 @@ import java.time.LocalTime;
 
 @Component
 public class DateTimeValidation {
-    @Value("${offset_time}")
+
+    @Value("${offset-time}")
     private int offsetTime;
 
     public void checkTime(Restaurant restaurant) {

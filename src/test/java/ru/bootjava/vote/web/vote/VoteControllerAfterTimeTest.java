@@ -9,23 +9,20 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.bootjava.vote.model.Vote;
 import ru.bootjava.vote.util.JsonUtil;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.bootjava.vote.web.restaurant.RestaurantTestData.RESTAURANT_ID;
 import static ru.bootjava.vote.web.user.UserTestData.ADMIN_MAIL;
-import static ru.bootjava.vote.web.vote.VoteTestData.*;
 import static ru.bootjava.vote.web.vote.VoteTestData.VOTE_ID;
+import static ru.bootjava.vote.web.vote.VoteTestData.getUpdated;
 
 public class VoteControllerAfterTimeTest extends BaseVoteControllerTest {
 
     @DynamicPropertySource
     static void setDynamicProperties(DynamicPropertyRegistry registry) {
-        ZoneId tz = ZoneId.of("Europe/Moscow");
-        int offsetTime = ZonedDateTime.now(tz).toLocalTime().getHour();
+        int offsetTime = ZonedDateTime.now().toLocalTime().getHour();
         registry.add("offset_time", () -> offsetTime);
     }
 

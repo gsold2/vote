@@ -11,7 +11,6 @@ import ru.bootjava.vote.model.Vote;
 import ru.bootjava.vote.util.JsonUtil;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -25,8 +24,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
 
     @DynamicPropertySource
     static void setDynamicProperties(DynamicPropertyRegistry registry) {
-        ZoneId tz = ZoneId.of("Europe/Moscow");
-        int offsetTime = ZonedDateTime.now(tz).toLocalTime().getHour() + 1;
+        int offsetTime = ZonedDateTime.now().toLocalTime().getHour() + 1;
         registry.add("offset_time", () -> offsetTime);
     }
 

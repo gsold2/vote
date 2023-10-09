@@ -48,4 +48,4 @@ server.servlet:
 
 springdoc.swagger-ui.path: /
 
-offset_time: 11
+offset-time: 11 # it's time when user can change his mind

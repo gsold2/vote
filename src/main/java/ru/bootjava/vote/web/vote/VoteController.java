@@ -72,7 +72,7 @@ public class VoteController {
         service.save(userId, restaurantId, vote);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser,
                                                    @RequestParam @NonNull int restaurantId) {
         int userId = authUser.id();

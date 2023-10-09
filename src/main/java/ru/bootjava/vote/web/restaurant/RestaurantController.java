@@ -22,7 +22,8 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
-import static ru.bootjava.vote.util.validation.ValidationUtil.*;
+import static ru.bootjava.vote.util.validation.ValidationUtil.assureIdConsistent;
+import static ru.bootjava.vote.util.validation.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -77,7 +78,6 @@ public class RestaurantController {
         int userId = authUser.id();
         log.info("create {} for user {}", restaurant, userId);
         checkNew(restaurant);
-        checkZoneId(restaurant);
         Restaurant created = service.save(userId, restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
