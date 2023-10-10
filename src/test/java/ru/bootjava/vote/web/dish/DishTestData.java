@@ -22,7 +22,6 @@ public class DishTestData {
 
     public static final List<Dish> dishes1 = List.of(dish1, dish2, dish3);
     public static final List<Dish> dishes2 = List.of(dish4, dish5, dish6);
-    public static final List<Dish> allDishes = List.of(dish1, dish2, dish3, dish4, dish5, dish6);
 
     public static Dish getNew() {
         return new Dish(null, "new_dish", 100);

@@ -14,6 +14,6 @@ public class DishUtil {
     }
 
     public static DishTo createTo(Dish dish) {
-        return new DishTo(dish.getId(), dish.getName(), dish.getPriceInCoins());
+        return new DishTo(dish.getId(), dish.getName(), dish.getPrice());
     }
 }

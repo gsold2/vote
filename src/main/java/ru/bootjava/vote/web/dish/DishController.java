@@ -50,14 +50,8 @@ public class DishController {
     }
 
     @GetMapping
-    public List<DishTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("getAll for user {}", authUser.id());
-        return DishUtil.getTos(dishRepository.getAll(authUser.id()));
-    }
-
-    @GetMapping("/filter")
     public List<DishTo> getAllByRestaurant(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull int restaurantId) {
-        log.info("getAll for the user {} and restaurant{}", authUser.id(), restaurantId);
+        log.info("get all dishes for restaurant {} and user {}", restaurantId, authUser.id());
         return DishUtil.getTos(dishRepository.getAllByRestaurant(authUser.id(), restaurantId));
     }
 
@@ -76,7 +70,7 @@ public class DishController {
                                                    @Valid @RequestBody Dish dish,
                                                    @RequestParam @NonNull int restaurantId) {
         int userId = authUser.id();
-        log.info("create {} for restaurant {} by user {}", dish, restaurantId, userId);
+        log.info("create {} for restaurant {} and user {}", dish, restaurantId, userId);
         checkNew(dish);
         restaurantRepository.getExistedAndBelonged(userId, restaurantId);
         Dish created = service.save(restaurantId, dish);

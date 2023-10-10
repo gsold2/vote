@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.bootjava.vote.util.DishUtil.getTos;
 import static ru.bootjava.vote.web.dish.DishController.REST_URL;
 import static ru.bootjava.vote.web.dish.DishTestData.*;
 import static ru.bootjava.vote.web.restaurant.RestaurantTestData.RESTAURANT_ID;
@@ -101,18 +100,8 @@ public class DishControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(DishController.REST_URL))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DISH_TO_MATCHER.contentJson(getTos(allDishes)));
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
     void getAllByRestaurant() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "filter")
+        perform(MockMvcRequestBuilders.get(DishController.REST_URL)
                 .param("restaurantId", String.valueOf(RESTAURANT_ID)))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -157,7 +146,7 @@ public class DishControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicate() throws Exception {
-        Dish invalid = new Dish(DISH_ID, dish2.getName(), dish2.getPriceInCoins());
+        Dish invalid = new Dish(DISH_ID, dish2.getName(), dish2.getPrice());
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + DISH_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
@@ -168,7 +157,7 @@ public class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicate() throws Exception {
-        Dish invalid = new Dish(null, dish1.getName(), dish1.getPriceInCoins());
+        Dish invalid = new Dish(null, dish1.getName(), dish1.getPrice());
         perform(MockMvcRequestBuilders.post(DishController.REST_URL)
                 .param("restaurantId", String.valueOf(RESTAURANT_ID))
                 .contentType(MediaType.APPLICATION_JSON)

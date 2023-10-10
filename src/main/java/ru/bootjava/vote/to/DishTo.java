@@ -10,10 +10,10 @@ import lombok.Value;
 public class DishTo extends NamedTo {
     @NotNull
     @Min(0)
-    Integer priceInCoins;
+    Integer price;
 
-    public DishTo(Integer id, String name, int priceInCoins) {
+    public DishTo(Integer id, String name, int price) {
         super(id, name);
-        this.priceInCoins = priceInCoins;
+        this.price = price;
     }
 }

@@ -12,7 +12,7 @@ INSERT INTO RESTAURANT (user_id, name)
 VALUES (2, 'restaurant_1'),
        (2, 'restaurant_2');
 
-INSERT INTO DISH (name, price_in_coins, restaurant_id)
+INSERT INTO DISH (name, price, restaurant_id)
 VALUES ('dish_1', 100, 1),
        ('dish_2', 150, 1),
        ('dish_3', 200, 1),

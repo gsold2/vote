@@ -12,16 +12,16 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table(name = "dish", uniqueConstraints = {@UniqueConstraint(name = "dish_idx", columnNames = {"restaurant_id", "name", "price_in_coins"})})
+@Table(name = "dish", uniqueConstraints = {@UniqueConstraint(name = "dish_idx", columnNames = {"restaurant_id", "name", "price"})})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Dish extends NamedEntity {
 
-    @Column(name = "price_in_coins", nullable = false)
+    @Column(name = "price", nullable = false)
     @NotNull
     @Min(0)
-    private Integer priceInCoins;
+    private Integer price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
@@ -29,9 +29,9 @@ public class Dish extends NamedEntity {
     @JsonIgnore
     private Restaurant restaurant;
 
-    public Dish(Integer id, String name, int priceInCoins) {
+    public Dish(Integer id, String name, int price) {
         super(id, name);
-        this.priceInCoins = priceInCoins;
+        this.price = price;
     }
 
     @Override

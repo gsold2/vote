@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.bootjava.vote.error.DataConflictException;
-import ru.bootjava.vote.error.NotFoundException;
 import ru.bootjava.vote.model.Dish;
 
 import java.util.List;
@@ -12,9 +11,6 @@ import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface DishRepository extends BaseRepository<Dish> {
-
-    @Query("SELECT d FROM Dish d WHERE d.restaurant.user.id = :userId")
-    List<Dish> getAll(int userId);
 
     @Query("SELECT d FROM Dish d WHERE d.restaurant.user.id = :userId AND d.restaurant.id=:restaurantId")
     List<Dish> getAllByRestaurant(@Param("userId") int userId, @Param("restaurantId") int restaurantId);
