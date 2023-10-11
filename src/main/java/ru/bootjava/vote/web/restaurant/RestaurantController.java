@@ -3,11 +3,9 @@ package ru.bootjava.vote.web.restaurant;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,7 +17,6 @@ import ru.bootjava.vote.util.RestaurantsUtil;
 import ru.bootjava.vote.web.AuthUser;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.List;
 
 import static ru.bootjava.vote.util.validation.ValidationUtil.assureIdConsistent;
@@ -52,15 +49,14 @@ public class RestaurantController {
 
     @GetMapping
     public List<RestaurantTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("getAll for user {}", authUser.id());
+        log.info("get all restaurants for user {}", authUser.id());
         return RestaurantsUtil.getTos(repository.getAll(authUser.id()));
     }
 
     @GetMapping("/filter")
-    public List<RestaurantTo> getAllWithMenuByDay(@AuthenticationPrincipal AuthUser authUser,
-                                                  @RequestParam @NonNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        log.info("getAll for user {} and date {}", authUser.id(), date);
-        return RestaurantsUtil.getTos(repository.getAllWithMenuByDate(authUser.id(), date));
+    public List<RestaurantTo> getAllWithMenuUpToday(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("get all restaurants with menu for user {} up today", authUser.id());
+        return RestaurantsUtil.getTos(repository.getAllWithMenuUpToday(authUser.id()));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

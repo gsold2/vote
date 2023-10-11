@@ -109,9 +109,8 @@ public class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getAllWithMenuByDay() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "filter")
-                .param("date", "2020-01-30"))
+    void getAllWithMenuUpToday() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "filter"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(RESTAURANT_TO_MATCHER.contentJson(getTos(List.of(restaurant1))));
