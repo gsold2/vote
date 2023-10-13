@@ -15,16 +15,13 @@ VALUES (2, 'restaurant_1'),
 INSERT INTO DISH (name, price, restaurant_id)
 VALUES ('dish_1', 100, 1),
        ('dish_2', 150, 1),
-       ('dish_3', 200, 1),
-       ('dish_1', 100, 2),
-       ('dish_2', 150, 2),
-       ('dish_3', 200, 2);
+       ('dish_1', 100, 2);
 
 INSERT INTO MENU_ITEM (date, dish_id)
 VALUES ('2020-01-29', 1),
        ('2020-01-29', 2),
-       ('2020-01-29', 3),
-       ('2020-01-30', 1);
+       ('2020-01-30', 3),
+       (now(), 1);
 
 INSERT INTO VOTE (user_id, restaurant_id, date)
 VALUES (1, 1, '2020-01-30'),

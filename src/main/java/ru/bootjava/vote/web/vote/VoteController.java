@@ -10,7 +10,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.bootjava.vote.model.Restaurant;
 import ru.bootjava.vote.model.Vote;
 import ru.bootjava.vote.repository.RestaurantRepository;
 import ru.bootjava.vote.repository.UserRepository;
@@ -22,6 +21,7 @@ import ru.bootjava.vote.util.validation.DateTimeValidation;
 import ru.bootjava.vote.web.AuthUser;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 import static ru.bootjava.vote.util.validation.ValidationUtil.assureIdConsistent;
@@ -66,9 +66,9 @@ public class VoteController {
         log.info("update {} for user {}", vote, userId);
         assureIdConsistent(vote, id);
         voteRepository.getExistedAndBelonged(userId, id);
+        dateTimeValidation.checkDateAndTime(vote);
         int restaurantId = vote.getRestaurant().id();
-        Restaurant restaurant = restaurantRepository.getExisted(restaurantId);
-        dateTimeValidation.checkDateAndTime(restaurant, vote);
+        restaurantRepository.getExisted(restaurantId);
         service.save(userId, restaurantId, vote);
     }
 
@@ -77,9 +77,9 @@ public class VoteController {
                                                    @RequestParam @NonNull int restaurantId) {
         int userId = authUser.id();
         log.info("create for restaurant {} by user {}", restaurantId, userId);
-        Restaurant restaurant = restaurantRepository.getExisted(restaurantId);
-        dateTimeValidation.checkTime(restaurant);
-        Vote vote = new Vote(null, restaurant.getDate());
+        dateTimeValidation.checkTime();
+        restaurantRepository.getExisted(restaurantId);
+        Vote vote = new Vote(null, LocalDate.now());
         Vote created = service.save(userId, restaurantId, vote);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")

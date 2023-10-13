@@ -15,7 +15,6 @@ import ru.bootjava.vote.repository.DishRepository;
 import ru.bootjava.vote.repository.MenuItemRepository;
 import ru.bootjava.vote.repository.RestaurantRepository;
 import ru.bootjava.vote.service.MenuItemService;
-import ru.bootjava.vote.to.IdTo;
 import ru.bootjava.vote.to.MenuItemTo;
 import ru.bootjava.vote.util.MenuItemUtil;
 import ru.bootjava.vote.web.AuthUser;
@@ -41,7 +40,7 @@ public class MenuItemController {
 
     @GetMapping("/{id}")
     public ResponseEntity<MenuItem> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
-        log.info("get restaurant {} for user {}", id, authUser.id());
+        log.info("get menu item {} for user {}", id, authUser.id());
         return ResponseEntity.of(menuItemRepository.get(authUser.id(), id));
     }
 
@@ -58,7 +57,7 @@ public class MenuItemController {
     public List<MenuItemTo> getAllByRestaurantAndDate(@AuthenticationPrincipal AuthUser authUser,
                                                       @RequestParam @NonNull int restaurantId,
                                                       @RequestParam @NonNull LocalDate date) {
-        log.info("getAll for the user {} and restaurant{} with date{}", authUser.id(), restaurantId, date);
+        log.info("get all menu items for the user {} and restaurant{} on date {}", authUser.id(), restaurantId, date);
         return MenuItemUtil.getTos(menuItemRepository.getAllByRestaurantAndDate(authUser.id(), restaurantId, date));
     }
 
@@ -87,19 +86,19 @@ public class MenuItemController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PostMapping(value = "/by-dishIdes", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MenuItem>> multipleCreationWithLocation(@AuthenticationPrincipal AuthUser authUser,
-                                                                       @Valid @RequestBody List<IdTo> dishIdes,
-                                                                       @RequestParam @NonNull Integer restaurantId,
-                                                                       @RequestParam @NonNull LocalDate date) {
+    @PostMapping(value = "/clone-up-today")
+    public ResponseEntity<List<MenuItem>> multipleCreationWithLocationUpToday(@AuthenticationPrincipal AuthUser authUser,
+                                                                              @RequestParam @NonNull Integer restaurantId,
+                                                                              @RequestParam @NonNull LocalDate date) {
         int userId = authUser.id();
-        log.info("create menuItems from {} for {} by user {} with date{}", dishIdes, restaurantId, userId, date);
+        log.info("clone menu items for {} and user {} with date {}", restaurantId, userId, date);
         restaurantRepository.getExistedAndBelonged(userId, restaurantId);
-        dishIdes.forEach(dishId -> dishRepository.getExistedAndBelonged(userId, dishId.getId()));
-        List<MenuItem> created = service.saveAll(dishIdes, date);
+        menuItemRepository.checkIsMenuEmptyUpToday(userId, restaurantId);
+        List<MenuItem> menuItems = menuItemRepository.getAllByRestaurantAndDate(authUser.id(), restaurantId, date);
+        List<MenuItem> created = service.saveAll(menuItems);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/filter?restaurantId={restaurantId}&date={date}")
-                .buildAndExpand(restaurantId, date).toUri();
+                .buildAndExpand(restaurantId, LocalDate.now()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 }

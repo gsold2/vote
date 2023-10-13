@@ -6,11 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.bootjava.vote.model.MenuItem;
 import ru.bootjava.vote.repository.DishRepository;
 import ru.bootjava.vote.repository.MenuItemRepository;
-import ru.bootjava.vote.to.IdTo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,13 +25,13 @@ public class MenuItemService {
     }
 
     @Transactional
-    public List<MenuItem> saveAll(List<IdTo> dishIdes, LocalDate date) {
-        List<MenuItem> menuItems = new ArrayList<>();
-        for (IdTo dishId : dishIdes) {
-            MenuItem menuItem = new MenuItem(null, date);
-            menuItem.setDish(dishRepository.getExisted(dishId.id()));
-            menuItems.add(menuItem);
+    public List<MenuItem> saveAll(List<MenuItem> menuItems) {
+        List<MenuItem> clones = new ArrayList<>();
+        for (MenuItem menuItem : menuItems) {
+            MenuItem clone = new MenuItem(null, LocalDate.now());
+            clone.setDish(menuItem.getDish());
+            clones.add(clone);
         }
-        return menuItemRepository.saveAllAndFlush(menuItems);
+        return menuItemRepository.saveAllAndFlush(clones);
     }
 }

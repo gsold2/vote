@@ -16,14 +16,9 @@ public class MenuItemTestData {
 
     public static final MenuItem menuItem1 = new MenuItem(MENU_ITEM_ID, LocalDate.parse("2020-01-29"));
     public static final MenuItem menuItem2 = new MenuItem(MENU_ITEM_ID + 1, LocalDate.parse("2020-01-29"));
-    public static final MenuItem menuItem3 = new MenuItem(MENU_ITEM_ID + 2, LocalDate.parse("2020-01-29"));
-    public static final MenuItem menuItem4 = new MenuItem(MENU_ITEM_ID + 3, LocalDate.parse("2020-01-30"));
-    public static final MenuItem menuItem5 = new MenuItem(MENU_ITEM_ID + 4, LocalDate.parse("2023-01-29"));
-    public static final MenuItem menuItem6 = new MenuItem(MENU_ITEM_ID + 5, LocalDate.parse("2023-01-29"));
-    public static final MenuItem menuItem7 = new MenuItem(MENU_ITEM_ID + 6, LocalDate.parse("2023-01-29"));
+    public static final MenuItem menuItem5 = new MenuItem(MENU_ITEM_ID + 4, LocalDate.now());
 
-    public static final List<MenuItem> menuItems1 = List.of(menuItem1, menuItem2, menuItem3);
-    public static final List<MenuItem> menuItems2 = List.of(menuItem5, menuItem6, menuItem7);
+    public static final List<MenuItem> menuItems = List.of(menuItem1, menuItem2);
 
     public static MenuItem getNew() {
         return new MenuItem(null, LocalDate.parse("2020-02-01"));

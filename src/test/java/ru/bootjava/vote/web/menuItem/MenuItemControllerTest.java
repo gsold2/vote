@@ -8,7 +8,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.bootjava.vote.model.BaseEntity;
 import ru.bootjava.vote.model.MenuItem;
 import ru.bootjava.vote.repository.MenuItemRepository;
 import ru.bootjava.vote.util.JsonUtil;
@@ -17,14 +16,11 @@ import ru.bootjava.vote.web.AbstractControllerTest;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.bootjava.vote.web.dish.DishTestData.dishes1;
-import static ru.bootjava.vote.web.dish.DishTestData.dishes2;
 import static ru.bootjava.vote.web.menuItem.MenuItemController.REST_URL;
 import static ru.bootjava.vote.web.menuItem.MenuItemTestData.*;
 import static ru.bootjava.vote.web.restaurant.RestaurantTestData.RESTAURANT_ID;
@@ -113,7 +109,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
                 .param("date", String.valueOf(menuItem1.getDate())))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MENU_ITEM_TO_MATCHER.contentJson(MenuItemUtil.getTos(menuItems1)));
+                .andExpect(MENU_ITEM_TO_MATCHER.contentJson(MenuItemUtil.getTos(menuItems)));
     }
 
     @Test
@@ -143,7 +139,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicate() throws Exception {
-        MenuItem invalid = new MenuItem(MENU_ITEM_ID, menuItem4.getDate());
+        MenuItem invalid = new MenuItem(MENU_ITEM_ID, LocalDate.now());
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + MENU_ITEM_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
@@ -166,42 +162,25 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void multipleCreationWithLocation() throws Exception {
-        List<Integer> dishIdes = dishes1.stream().map(BaseEntity::getId).collect(Collectors.toList());
-        perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "by-dishIdes")
-                .param("restaurantId", String.valueOf(RESTAURANT_ID))
-                .param("date", "2023-01-29")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(dishIdes)))
+        perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "/clone-up-today")
+                .param("restaurantId", String.valueOf(RESTAURANT_ID + 1))
+                .param("date", "2020-01-30")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated());
 
-        List<MenuItem> created = menuItemRepository.getAllByRestaurantAndDate(ADMIN_ID, RESTAURANT_ID, LocalDate.parse("2023-01-29"));
-        MENU_ITEM_MATCHER.assertMatch(created, menuItems2);
+        List<MenuItem> created = menuItemRepository.getAllByRestaurantAndDate(ADMIN_ID, RESTAURANT_ID + 1, LocalDate.now());
+        MENU_ITEM_MATCHER.assertMatch(created, List.of(menuItem5));
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void multipleCreationDuplicateDate() throws Exception {
-        List<Integer> dishIdes = dishes1.stream().map(BaseEntity::getId).collect(Collectors.toList());
-        perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "by-dishes")
+    void multipleCreationMenuIsNotEmpty() throws Exception {
+        perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "/clone-up-today")
                 .param("restaurantId", String.valueOf(RESTAURANT_ID))
-                .param("date", String.valueOf(menuItem1.getDate()))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(dishIdes)))
+                .param("date", String.valueOf(LocalDate.now()))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void multipleCreationWrongRestaurant() throws Exception {
-        List<Integer> dishIdes = dishes2.stream().map(BaseEntity::getId).collect(Collectors.toList());
-        perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "by-dishes")
-                .param("restaurantId", String.valueOf(RESTAURANT_ID))
-                .param("date", "2023-01-29")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(dishIdes)))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isConflict());
     }
 }

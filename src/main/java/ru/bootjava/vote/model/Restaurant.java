@@ -32,21 +32,6 @@ public class Restaurant extends NamedEntity {
         super(id, name);
     }
 
-    @Schema(hidden = true)
-    public LocalTime getTime() {
-        return getLocalDateTime().toLocalTime();
-    }
-
-    @Schema(hidden = true)
-    public LocalDate getDate() {
-        return getLocalDateTime().toLocalDate();
-    }
-
-    @Schema(hidden = true)
-    private LocalDateTime getLocalDateTime() {
-        return ZonedDateTime.now().toLocalDateTime();
-    }
-
     @Override
     public String toString() {
         return "Restaurant:" + id + '[' + name + ']';

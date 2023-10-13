@@ -105,7 +105,7 @@ public class DishControllerTest extends AbstractControllerTest {
                 .param("restaurantId", String.valueOf(RESTAURANT_ID)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(DISH_TO_MATCHER.contentJson(DishUtil.getTos(dishes1)));
+                .andExpect(DISH_TO_MATCHER.contentJson(DishUtil.getTos(dishes)));
     }
 
     @Test

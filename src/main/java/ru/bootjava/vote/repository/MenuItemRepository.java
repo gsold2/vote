@@ -22,4 +22,10 @@ public interface MenuItemRepository extends BaseRepository<MenuItem> {
         return get(userId, id).orElseThrow(
                 () -> new DataConflictException("MenuItem id=" + id + " is not exist or doesn't belong to User id=" + userId));
     }
+
+    default void checkIsMenuEmptyUpToday(int userId, int restaurantId) {
+        if (getAllByRestaurantAndDate(userId, restaurantId, LocalDate.now()).size() > 0) {
+            throw new DataConflictException("Restaurant id=" + restaurantId + " already has menuItems up today. This method is not applicable.");
+        }
+    }
 }
