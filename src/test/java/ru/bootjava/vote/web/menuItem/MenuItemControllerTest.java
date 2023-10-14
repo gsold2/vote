@@ -165,15 +165,19 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void multipleCreationWithLocation() throws Exception {
-        perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "/clone-up-today")
+        MenuItem newMenuItem = getNew();
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "/clone-up-today")
                 .param("restaurantId", String.valueOf(restaurant2.id()))
                 .param("date", "2020-01-30")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated());
 
-        List<MenuItem> created = menuItemRepository.getAllByRestaurantAndDate(ADMIN_ID, restaurant2.id(), LocalDate.now());
-        MENU_ITEM_MATCHER.assertMatch(created, List.of(menuItem5));
+        List<MenuItem> created = MENU_ITEM_MATCHER.readListFromJson(action);
+        int newId = created.get(0).id();
+        newMenuItem.setId(newId);
+        MENU_ITEM_MATCHER.assertMatch(created, List.of(newMenuItem));
+        MENU_ITEM_MATCHER.assertMatch(menuItemRepository.getExisted(newId), newMenuItem);
     }
 
     @Test
