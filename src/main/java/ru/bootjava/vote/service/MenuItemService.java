@@ -3,6 +3,7 @@ package ru.bootjava.vote.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.bootjava.vote.model.Dish;
 import ru.bootjava.vote.model.MenuItem;
 import ru.bootjava.vote.repository.DishRepository;
 import ru.bootjava.vote.repository.MenuItemRepository;
@@ -10,7 +11,6 @@ import ru.bootjava.vote.repository.MenuItemRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -20,7 +20,9 @@ public class MenuItemService {
 
     @Transactional
     public MenuItem save(int dishId, MenuItem menuItem) {
-        menuItem.setDish(dishRepository.getExisted(dishId));
+        Dish existed = dishRepository.getExisted(dishId);
+        menuItem.setDish(existed);
+        menuItem.setRestaurant(existed.getRestaurant());
         return menuItemRepository.save(menuItem);
     }
 
@@ -30,8 +32,9 @@ public class MenuItemService {
         for (MenuItem menuItem : menuItems) {
             MenuItem clone = new MenuItem(null, LocalDate.now());
             clone.setDish(menuItem.getDish());
+            clone.setRestaurant(menuItem.getRestaurant());
             clones.add(clone);
         }
-        return menuItemRepository.saveAllAndFlush(clones);
+        return menuItemRepository.saveAll(clones);
     }
 }

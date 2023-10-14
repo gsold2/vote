@@ -3,13 +3,10 @@ package ru.bootjava.vote.util.validation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.bootjava.vote.error.IllegalRequestDataException;
-import ru.bootjava.vote.model.Restaurant;
 import ru.bootjava.vote.model.Vote;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 @Component
 public class DateTimeValidation {

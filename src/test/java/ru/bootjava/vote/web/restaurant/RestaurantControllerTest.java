@@ -113,7 +113,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "filter"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(RESTAURANT_TO_MATCHER.contentJson(getTos(List.of(restaurant1))));
+                .andExpect(RESTAURANT_MATCHER.contentJson(List.of(restaurant1)));
     }
 
     @Test

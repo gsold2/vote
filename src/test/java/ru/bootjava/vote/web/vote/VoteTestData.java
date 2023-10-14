@@ -13,7 +13,7 @@ import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant2;
 
 public class VoteTestData {
     public static final MatcherFactory.Matcher<Vote> VOTE_MATCHER = MatcherFactory.usingEqualsComparator(Vote.class);
-    public static MatcherFactory.Matcher<VoteTo> VOTE_TO_MATCHER = MatcherFactory.usingEqualsComparator(VoteTo.class);
+    public static final MatcherFactory.Matcher<VoteTo> VOTE_TO_MATCHER = MatcherFactory.usingEqualsComparator(VoteTo.class);
 
     public static final int VOTE_ID = 1;
     public static final int NOT_EXISTED_VOTE_ID = 10;

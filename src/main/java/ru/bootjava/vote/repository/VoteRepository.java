@@ -6,7 +6,6 @@ import ru.bootjava.vote.error.DataConflictException;
 import ru.bootjava.vote.model.Vote;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 

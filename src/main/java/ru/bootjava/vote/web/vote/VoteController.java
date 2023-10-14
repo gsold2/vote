@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.bootjava.vote.model.Vote;
 import ru.bootjava.vote.repository.RestaurantRepository;
-import ru.bootjava.vote.repository.UserRepository;
 import ru.bootjava.vote.repository.VoteRepository;
 import ru.bootjava.vote.service.VoteService;
 import ru.bootjava.vote.to.VoteTo;
@@ -35,7 +34,6 @@ public class VoteController {
 
     private final DateTimeValidation dateTimeValidation;
     private final VoteRepository voteRepository;
-    private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
     private final VoteService service;
 

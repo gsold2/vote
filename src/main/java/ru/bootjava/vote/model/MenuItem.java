@@ -29,6 +29,12 @@ public class MenuItem extends BaseEntity {
     @JsonIgnore
     private Dish dish;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Restaurant restaurant;
+
     public MenuItem(Integer id, LocalDate date) {
         super(id);
         this.date = date;

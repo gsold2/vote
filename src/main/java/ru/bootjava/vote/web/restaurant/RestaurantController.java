@@ -54,9 +54,9 @@ public class RestaurantController {
     }
 
     @GetMapping("/filter")
-    public List<RestaurantTo> getAllWithMenuUpToday(@AuthenticationPrincipal AuthUser authUser) {
+    public List<Restaurant> getAllWithMenuUpToday(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get all restaurants with menu for user {} up today", authUser.id());
-        return RestaurantsUtil.getTos(repository.getAllWithMenuUpToday(authUser.id()));
+        return repository.getAllWithMenuUpToday(authUser.id());
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

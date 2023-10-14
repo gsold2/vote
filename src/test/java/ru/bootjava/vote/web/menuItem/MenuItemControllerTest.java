@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.bootjava.vote.web.dish.DishTestData.dish1;
+import static ru.bootjava.vote.web.dish.DishTestData.dish2;
 import static ru.bootjava.vote.web.menuItem.MenuItemController.REST_URL;
 import static ru.bootjava.vote.web.menuItem.MenuItemTestData.*;
 import static ru.bootjava.vote.web.restaurant.RestaurantTestData.RESTAURANT_ID;
@@ -90,7 +92,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     void createWithLocation() throws Exception {
         MenuItem newMenuItem = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(MenuItemController.REST_URL)
-                .param("dishId", String.valueOf(MENU_ITEM_ID))
+                .param("dishId", String.valueOf(dish2.id()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newMenuItem)));
 
@@ -117,7 +119,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     void createInvalid() throws Exception {
         MenuItem invalid = new MenuItem(null, null);
         perform(MockMvcRequestBuilders.post(MenuItemController.REST_URL)
-                .param("dishId", String.valueOf(MENU_ITEM_ID))
+                .param("dishId", String.valueOf(dish1.id()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
@@ -152,7 +154,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     void createDuplicate() throws Exception {
         MenuItem invalid = new MenuItem(null, menuItem1.getDate());
         perform(MockMvcRequestBuilders.post(MenuItemController.REST_URL)
-                .param("dishId", String.valueOf(MENU_ITEM_ID))
+                .param("dishId", String.valueOf(dish1.id()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
