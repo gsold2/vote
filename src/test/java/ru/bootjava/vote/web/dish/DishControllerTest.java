@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.bootjava.vote.web.dish.DishController.REST_URL;
 import static ru.bootjava.vote.web.dish.DishTestData.*;
-import static ru.bootjava.vote.web.restaurant.RestaurantTestData.RESTAURANT_ID;
+import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant1;
 import static ru.bootjava.vote.web.user.UserTestData.ADMIN_MAIL;
 
 public class DishControllerTest extends AbstractControllerTest {
@@ -87,7 +87,7 @@ public class DishControllerTest extends AbstractControllerTest {
     void createWithLocation() throws Exception {
         Dish newDish = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(DishController.REST_URL)
-                .param("restaurantId", String.valueOf(RESTAURANT_ID))
+                .param("restaurantId", String.valueOf(restaurant1.id()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newDish)));
 
@@ -102,7 +102,7 @@ public class DishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void getAllByRestaurant() throws Exception {
         perform(MockMvcRequestBuilders.get(DishController.REST_URL)
-                .param("restaurantId", String.valueOf(RESTAURANT_ID)))
+                .param("restaurantId", String.valueOf(restaurant1.id())))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(DISH_TO_MATCHER.contentJson(DishUtil.getTos(dishes)));
@@ -113,7 +113,7 @@ public class DishControllerTest extends AbstractControllerTest {
     void createInvalid() throws Exception {
         Dish invalid = new Dish(null, null, -1);
         perform(MockMvcRequestBuilders.post(DishController.REST_URL)
-                .param("restaurantId", String.valueOf(RESTAURANT_ID))
+                .param("restaurantId", String.valueOf(restaurant1.id()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
@@ -159,7 +159,7 @@ public class DishControllerTest extends AbstractControllerTest {
     void createDuplicate() throws Exception {
         Dish invalid = new Dish(null, dish1.getName(), dish1.getPrice());
         perform(MockMvcRequestBuilders.post(DishController.REST_URL)
-                .param("restaurantId", String.valueOf(RESTAURANT_ID))
+                .param("restaurantId", String.valueOf(restaurant1.id()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())

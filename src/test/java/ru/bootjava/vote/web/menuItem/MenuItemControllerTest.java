@@ -25,7 +25,8 @@ import static ru.bootjava.vote.web.dish.DishTestData.dish1;
 import static ru.bootjava.vote.web.dish.DishTestData.dish2;
 import static ru.bootjava.vote.web.menuItem.MenuItemController.REST_URL;
 import static ru.bootjava.vote.web.menuItem.MenuItemTestData.*;
-import static ru.bootjava.vote.web.restaurant.RestaurantTestData.RESTAURANT_ID;
+import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant1;
+import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant2;
 import static ru.bootjava.vote.web.user.UserTestData.ADMIN_ID;
 import static ru.bootjava.vote.web.user.UserTestData.ADMIN_MAIL;
 
@@ -107,7 +108,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void getAllByRestaurantAndDate() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "filter")
-                .param("restaurantId", String.valueOf(RESTAURANT_ID))
+                .param("restaurantId", String.valueOf(restaurant1.id()))
                 .param("date", String.valueOf(menuItem1.getDate())))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -165,13 +166,13 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void multipleCreationWithLocation() throws Exception {
         perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "/clone-up-today")
-                .param("restaurantId", String.valueOf(RESTAURANT_ID + 1))
+                .param("restaurantId", String.valueOf(restaurant2.id()))
                 .param("date", "2020-01-30")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated());
 
-        List<MenuItem> created = menuItemRepository.getAllByRestaurantAndDate(ADMIN_ID, RESTAURANT_ID + 1, LocalDate.now());
+        List<MenuItem> created = menuItemRepository.getAllByRestaurantAndDate(ADMIN_ID, restaurant2.id(), LocalDate.now());
         MENU_ITEM_MATCHER.assertMatch(created, List.of(menuItem5));
     }
 
@@ -179,7 +180,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void multipleCreationMenuIsNotEmpty() throws Exception {
         perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "/clone-up-today")
-                .param("restaurantId", String.valueOf(RESTAURANT_ID))
+                .param("restaurantId", String.valueOf(restaurant1.id()))
                 .param("date", String.valueOf(LocalDate.now()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
