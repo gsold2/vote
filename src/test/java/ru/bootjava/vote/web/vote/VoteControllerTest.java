@@ -6,6 +6,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.bootjava.vote.web.user.UserTestData;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -67,5 +68,17 @@ public class VoteControllerTest extends BaseVoteControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(VOTE_TO_MATCHER.contentJson(getTos(List.of(vote1))));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getBetweenWithInclusion() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL)
+                .param("startDate", String.valueOf(vote1.getDate()))
+                .param("endDate", String.valueOf(LocalDate.now())))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(VOTE_TO_MATCHER.contentJson(getTos(votes)));
     }
 }

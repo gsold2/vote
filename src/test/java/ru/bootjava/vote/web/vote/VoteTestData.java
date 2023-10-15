@@ -6,7 +6,6 @@ import ru.bootjava.vote.to.VoteTo;
 import ru.bootjava.vote.web.MatcherFactory;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant2;
@@ -22,7 +21,7 @@ public class VoteTestData {
     public static final Vote vote2 = new Vote(VOTE_ID + 1, LocalDate.parse("2020-01-30"));
     public static final Vote vote3 = new Vote(VOTE_ID + 2, LocalDate.now());
 
-    public static final List<Vote> votes1 = List.of(vote1, vote2, vote3);
+    public static final List<Vote> votes = List.of(vote2, vote3);
 
     public static Vote getNew() {
         return new Vote(null, getDate());
@@ -35,6 +34,6 @@ public class VoteTestData {
     }
 
     private static LocalDate getDate() {
-        return ZonedDateTime.now().toLocalDateTime().toLocalDate();
+        return LocalDate.now();
     }
 }

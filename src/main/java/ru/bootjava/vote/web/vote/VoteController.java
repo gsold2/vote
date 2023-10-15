@@ -3,10 +3,12 @@ package ru.bootjava.vote.web.vote;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -23,6 +25,8 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
+import static ru.bootjava.vote.util.DateUtil.atEndDayOrMax;
+import static ru.bootjava.vote.util.DateUtil.atStartDayOrMin;
 import static ru.bootjava.vote.util.validation.ValidationUtil.assureIdConsistent;
 
 @RestController
@@ -55,6 +59,16 @@ public class VoteController {
     public List<VoteTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
         log.info("getAll for user {}", authUser.id());
         return VoteUtil.getTos(voteRepository.getAll(authUser.id()));
+    }
+
+    @GetMapping("/filter")
+    public List<VoteTo> getBetweenWithInclusion(@AuthenticationPrincipal AuthUser authUser,
+                                                @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate){
+        int userId = authUser.id();
+        log.info("get between dates({} - {}) for user {}", startDate, endDate, userId);
+        List<Vote> votesDateFiltered = voteRepository.getBetweenWithInclusion(userId, atStartDayOrMin(startDate), atEndDayOrMax(endDate));
+        return VoteUtil.getTos(votesDateFiltered);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
