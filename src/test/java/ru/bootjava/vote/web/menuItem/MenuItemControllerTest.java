@@ -166,7 +166,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void multipleCreationWithLocation() throws Exception {
         MenuItem newMenuItem = getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "/clone-up-today")
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "/copy-up-today")
                 .param("restaurantId", String.valueOf(restaurant2.id()))
                 .param("date", "2020-01-30")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -183,7 +183,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void multipleCreationMenuIsNotEmpty() throws Exception {
-        perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "/clone-up-today")
+        perform(MockMvcRequestBuilders.post(REST_URL_SLASH + "/copy-up-today")
                 .param("restaurantId", String.valueOf(restaurant1.id()))
                 .param("date", String.valueOf(LocalDate.now()))
                 .contentType(MediaType.APPLICATION_JSON))

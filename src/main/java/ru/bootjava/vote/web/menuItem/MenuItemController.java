@@ -86,7 +86,7 @@ public class MenuItemController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PostMapping(value = "/clone-up-today")
+    @PostMapping(value = "/copy-up-today")
     public ResponseEntity<List<MenuItem>> multipleCreationWithLocationUpToday(@AuthenticationPrincipal AuthUser authUser,
                                                                               @RequestParam @NonNull Integer restaurantId,
                                                                               @RequestParam @NonNull LocalDate date) {
