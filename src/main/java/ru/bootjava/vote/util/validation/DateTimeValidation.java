@@ -10,9 +10,9 @@ import java.time.LocalTime;
 
 @Component
 public class DateTimeValidation {
+    public static final int defaultOffsetTime = 11;
 
-    @Value("${offset-time}")
-    private int offsetTime;
+    private int offsetTime = defaultOffsetTime;
 
     public void checkTime() {
         LocalTime localTime = LocalTime.now();
@@ -26,5 +26,9 @@ public class DateTimeValidation {
         if (!LocalDate.now().equals(vote.getDate())) {
             throw new IllegalRequestDataException(vote.getDate() + " does not match the current date");
         }
+    }
+
+    public void setOffsetTime(int offsetTime) {
+        this.offsetTime = offsetTime;
     }
 }

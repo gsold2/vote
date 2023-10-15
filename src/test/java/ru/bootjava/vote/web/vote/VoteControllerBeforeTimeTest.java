@@ -1,17 +1,19 @@
 package ru.bootjava.vote.web.vote;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.bootjava.vote.model.Vote;
 import ru.bootjava.vote.util.JsonUtil;
+import ru.bootjava.vote.util.validation.DateTimeValidation;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
+import java.time.LocalTime;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,10 +24,17 @@ import static ru.bootjava.vote.web.vote.VoteTestData.*;
 
 public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
 
-    @DynamicPropertySource
-    static void setDynamicProperties(DynamicPropertyRegistry registry) {
-        int offsetTime = ZonedDateTime.now().toLocalTime().getHour() + 1;
-        registry.add("offset_time", () -> offsetTime);
+    @Autowired
+    DateTimeValidation dateTimeValidation;
+
+    @BeforeEach
+    void beforeEach() {
+        dateTimeValidation.setOffsetTime(LocalTime.now().getHour() + 1);
+    }
+
+    @AfterEach
+    void afterEach() {
+        dateTimeValidation.setOffsetTime(DateTimeValidation.defaultOffsetTime);
     }
 
     @Test
