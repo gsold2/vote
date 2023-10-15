@@ -1,6 +1,5 @@
 package ru.bootjava.vote.util.validation;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.bootjava.vote.error.IllegalRequestDataException;
 import ru.bootjava.vote.model.Vote;
