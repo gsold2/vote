@@ -52,6 +52,7 @@ public class VoteController {
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("delete {} for user {}", id, authUser.id());
         Vote vote = voteRepository.getExistedAndBelonged(authUser.id(), id);
+        dateTimeValidation.checkDateAndTime(vote);
         voteRepository.delete(vote);
     }
 
@@ -64,7 +65,7 @@ public class VoteController {
     @GetMapping("/filter")
     public List<VoteTo> getBetweenWithInclusion(@AuthenticationPrincipal AuthUser authUser,
                                                 @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                                @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate){
+                                                @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         int userId = authUser.id();
         log.info("get between dates({} - {}) for user {}", startDate, endDate, userId);
         List<Vote> votesDateFiltered = voteRepository.getBetweenWithInclusion(userId, atStartDayOrMin(startDate), atEndDayOrMax(endDate));

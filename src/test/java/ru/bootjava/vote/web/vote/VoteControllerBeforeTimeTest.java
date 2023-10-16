@@ -11,10 +11,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.bootjava.vote.model.Vote;
 import ru.bootjava.vote.util.JsonUtil;
 import ru.bootjava.vote.util.validation.DateTimeValidation;
+import ru.bootjava.vote.web.user.UserTestData;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant1;
@@ -86,5 +88,13 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
                 .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void deleteValidTime() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + (VOTE_ID + 2)))
+                .andExpect(status().isNoContent());
+        assertFalse(voteRepository.get(UserTestData.ADMIN_ID, (VOTE_ID + 2)).isPresent());
     }
 }

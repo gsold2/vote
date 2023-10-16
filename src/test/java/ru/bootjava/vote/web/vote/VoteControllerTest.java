@@ -4,12 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.bootjava.vote.web.user.UserTestData;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,14 +41,6 @@ public class VoteControllerTest extends BaseVoteControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + NOT_EXISTED_VOTE_ID))
                 .andDo(print())
                 .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @WithUserDetails(value = USER_MAIL)
-    void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + VOTE_ID))
-                .andExpect(status().isNoContent());
-        assertFalse(voteRepository.get(UserTestData.ADMIN_ID, VOTE_ID).isPresent());
     }
 
     @Test

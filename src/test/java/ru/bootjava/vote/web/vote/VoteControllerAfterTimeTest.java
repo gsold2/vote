@@ -54,4 +54,11 @@ public class VoteControllerAfterTimeTest extends BaseVoteControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isUnprocessableEntity());
     }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void deleteInvalidTime() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + (VOTE_ID + 2)))
+                .andExpect(status().isUnprocessableEntity());
+    }
 }
