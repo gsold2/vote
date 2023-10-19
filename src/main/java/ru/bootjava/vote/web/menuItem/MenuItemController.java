@@ -3,6 +3,9 @@ package ru.bootjava.vote.web.menuItem;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,7 @@ import static ru.bootjava.vote.util.validation.ValidationUtil.checkNew;
 @RequestMapping(value = MenuItemController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
+@CacheConfig(cacheNames = "menuItems")
 public class MenuItemController {
     static final String REST_URL = "/api/admin/menu-items";
 
@@ -44,9 +48,9 @@ public class MenuItemController {
         return ResponseEntity.of(menuItemRepository.get(authUser.id(), id));
     }
 
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(allEntries = true)
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("delete {} for user {}", id, authUser.id());
         MenuItem menuItem = menuItemRepository.getExistedAndBelonged(authUser.id(), id);
@@ -54,6 +58,7 @@ public class MenuItemController {
     }
 
     @GetMapping("/filter")
+    @Cacheable(key="#restaurantId")
     public List<MenuItemTo> getAllByRestaurantAndDate(@AuthenticationPrincipal AuthUser authUser,
                                                       @RequestParam @NonNull int restaurantId,
                                                       @RequestParam @NonNull LocalDate date) {
@@ -63,6 +68,7 @@ public class MenuItemController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody MenuItem menuItem, @PathVariable int id) {
         int userId = authUser.id();
         log.info("update {} for user {}", menuItem, userId);
@@ -72,6 +78,7 @@ public class MenuItemController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict(allEntries = true)
     public ResponseEntity<MenuItem> createWithLocation(@AuthenticationPrincipal AuthUser authUser,
                                                        @Valid @RequestBody MenuItem menuItem,
                                                        @RequestParam @NonNull int dishId) {
@@ -87,6 +94,7 @@ public class MenuItemController {
     }
 
     @PostMapping(value = "/copy-up-today")
+    @CacheEvict(allEntries = true)
     public ResponseEntity<List<MenuItem>> multipleCreationWithLocationUpToday(@AuthenticationPrincipal AuthUser authUser,
                                                                               @RequestParam @NonNull Integer restaurantId,
                                                                               @RequestParam @NonNull LocalDate date) {

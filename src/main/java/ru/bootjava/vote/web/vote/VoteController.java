@@ -3,6 +3,9 @@ package ru.bootjava.vote.web.vote;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,6 +36,7 @@ import static ru.bootjava.vote.util.validation.ValidationUtil.assureIdConsistent
 @RequestMapping(value = VoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
+@CacheConfig(cacheNames = "votes")
 public class VoteController {
     static final String REST_URL = "/api/user/votes";
 
@@ -49,6 +53,7 @@ public class VoteController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(allEntries = true)
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("delete {} for user {}", id, authUser.id());
         Vote vote = voteRepository.getExistedAndBelonged(authUser.id(), id);
@@ -57,6 +62,7 @@ public class VoteController {
     }
 
     @GetMapping
+    @Cacheable(key="#authUser.authUser().id")
     public List<VoteTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
         log.info("getAll for user {}", authUser.id());
         return VoteUtil.getTos(voteRepository.getAll(authUser.id()));
@@ -74,6 +80,7 @@ public class VoteController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Vote vote, @PathVariable int id) {
         int userId = authUser.id();
         log.info("update {} for user {}", vote, userId);
@@ -86,6 +93,7 @@ public class VoteController {
     }
 
     @PostMapping
+    @CacheEvict(allEntries = true)
     public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser,
                                                    @RequestParam @NonNull int restaurantId) {
         int userId = authUser.id();

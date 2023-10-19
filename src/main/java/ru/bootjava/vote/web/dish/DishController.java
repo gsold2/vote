@@ -3,6 +3,9 @@ package ru.bootjava.vote.web.dish;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +31,7 @@ import static ru.bootjava.vote.util.validation.ValidationUtil.checkNew;
 @RequestMapping(value = DishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
+@CacheConfig(cacheNames = "dishes")
 public class DishController {
     static final String REST_URL = "/api/admin/dishes";
 
@@ -43,6 +47,7 @@ public class DishController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(allEntries = true)
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("delete {} for user {}", id, authUser.id());
         Dish dish = dishRepository.getExistedAndBelonged(authUser.id(), id);
@@ -50,6 +55,7 @@ public class DishController {
     }
 
     @GetMapping
+    @Cacheable(key="#restaurantId")
     public List<DishTo> getAllByRestaurant(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull int restaurantId) {
         log.info("get all dishes for restaurant {} and user {}", restaurantId, authUser.id());
         return DishUtil.getTos(dishRepository.getAllByRestaurant(authUser.id(), restaurantId));
@@ -57,6 +63,7 @@ public class DishController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Dish dish, @PathVariable int id) {
         int userId = authUser.id();
         log.info("update {} for user {}", dish, userId);
@@ -66,6 +73,7 @@ public class DishController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict(allEntries = true)
     public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser,
                                                    @Valid @RequestBody Dish dish,
                                                    @RequestParam @NonNull int restaurantId) {
