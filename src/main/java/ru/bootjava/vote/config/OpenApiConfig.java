@@ -35,10 +35,18 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfig {
 
     @Bean
-    public GroupedOpenApi api() {
+    public GroupedOpenApi adminApi() {
         return GroupedOpenApi.builder()
-                .group("REST API")
-                .pathsToMatch("/api/**")
+                .group("ADMIN REST API")
+                .pathsToMatch("/api/admin/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi userApi() {
+        return GroupedOpenApi.builder()
+                .group("USER REST API")
+                .pathsToMatch("/api/user/**")
                 .build();
     }
 }

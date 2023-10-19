@@ -28,7 +28,7 @@ import static ru.bootjava.vote.util.validation.ValidationUtil.checkNew;
 @AllArgsConstructor
 public class RestaurantController {
 
-    static final String REST_URL = "/api/restaurants";
+    static final String REST_URL = "/api/admin/restaurants";
 
     private final RestaurantRepository repository;
     private final RestaurantService service;

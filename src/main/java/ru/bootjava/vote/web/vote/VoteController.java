@@ -34,7 +34,7 @@ import static ru.bootjava.vote.util.validation.ValidationUtil.assureIdConsistent
 @Slf4j
 @AllArgsConstructor
 public class VoteController {
-    static final String REST_URL = "/api/votes";
+    static final String REST_URL = "/api/user/votes";
 
     private final DateTimeValidation dateTimeValidation;
     private final VoteRepository voteRepository;

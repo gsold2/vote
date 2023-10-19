@@ -29,7 +29,7 @@ import static ru.bootjava.vote.util.validation.ValidationUtil.checkNew;
 @Slf4j
 @AllArgsConstructor
 public class DishController {
-    static final String REST_URL = "/api/dishes";
+    static final String REST_URL = "/api/admin/dishes";
 
     private final DishRepository dishRepository;
     private final RestaurantRepository restaurantRepository;

@@ -31,7 +31,7 @@ import static ru.bootjava.vote.util.validation.ValidationUtil.checkNew;
 @Slf4j
 @AllArgsConstructor
 public class MenuItemController {
-    static final String REST_URL = "/api/menu-items";
+    static final String REST_URL = "/api/admin/menu-items";
 
     private final MenuItemRepository menuItemRepository;
     private final DishRepository dishRepository;

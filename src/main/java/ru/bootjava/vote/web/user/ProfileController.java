@@ -24,7 +24,7 @@ import static ru.bootjava.vote.util.validation.ValidationUtil.checkNew;
 @Slf4j
 // TODO: cache only most requested data!
 public class ProfileController extends AbstractUserController {
-    static final String REST_URL = "/api/profile";
+    static final String REST_URL = "/api/user/profile";
 
     @GetMapping
     public User get(@AuthenticationPrincipal AuthUser authUser) {
