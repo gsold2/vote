@@ -62,7 +62,7 @@ public class VoteController {
     }
 
     @GetMapping
-    @Cacheable(key="#authUser.authUser().id")
+    @Cacheable(key = "#authUser.authUser().id")
     public List<VoteTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
         log.info("getAll for user {}", authUser.id());
         return VoteUtil.getTos(voteRepository.getAll(authUser.id()));
@@ -98,7 +98,6 @@ public class VoteController {
                                                    @RequestParam @NonNull int restaurantId) {
         int userId = authUser.id();
         log.info("create for restaurant {} by user {}", restaurantId, userId);
-        dateTimeValidation.checkTime();
         restaurantRepository.getExisted(restaurantId);
         Vote vote = new Vote(null, LocalDate.now());
         Vote created = service.save(userId, restaurantId, vote);

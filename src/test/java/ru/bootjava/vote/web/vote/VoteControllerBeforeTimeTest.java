@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.bootjava.vote.model.Vote;
 import ru.bootjava.vote.util.JsonUtil;
@@ -17,11 +16,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant1;
 import static ru.bootjava.vote.web.user.UserTestData.ADMIN_MAIL;
-import static ru.bootjava.vote.web.user.UserTestData.USER_MAIL;
 import static ru.bootjava.vote.web.vote.VoteTestData.*;
 
 public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
@@ -37,23 +33,6 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
     @AfterEach
     void afterEach() {
         dateTimeValidation.setOffsetTime(DateTimeValidation.defaultOffsetTime);
-    }
-
-    @Test
-    @WithUserDetails(value = USER_MAIL)
-    void createValidTime() throws Exception {
-        Vote newVote = getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(VoteController.REST_URL)
-                .param("restaurantId", String.valueOf(restaurant1.id()))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isCreated());
-
-        Vote created = VOTE_MATCHER.readFromJson(action);
-        int newId = created.id();
-        newVote.setId(newId);
-        VOTE_MATCHER.assertMatch(created, newVote);
-        VOTE_MATCHER.assertMatch(voteRepository.getExisted(newId), newVote);
     }
 
     @Test

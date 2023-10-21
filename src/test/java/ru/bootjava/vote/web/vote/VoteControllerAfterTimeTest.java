@@ -13,9 +13,7 @@ import ru.bootjava.vote.util.validation.DateTimeValidation;
 
 import java.time.LocalTime;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant1;
 import static ru.bootjava.vote.web.user.UserTestData.ADMIN_MAIL;
 import static ru.bootjava.vote.web.vote.VoteTestData.VOTE_ID;
 import static ru.bootjava.vote.web.vote.VoteTestData.getUpdated;
@@ -37,16 +35,6 @@ public class VoteControllerAfterTimeTest extends BaseVoteControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void createInvalidTime() throws Exception {
-        perform(MockMvcRequestBuilders.post(VoteController.REST_URL)
-                .param("restaurantId", String.valueOf(restaurant1.id()))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalidTime() throws Exception {
         Vote updated = getUpdated();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 2))
@@ -59,6 +47,13 @@ public class VoteControllerAfterTimeTest extends BaseVoteControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void deleteInvalidTime() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + (VOTE_ID + 2)))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void deleteInvalidDay() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + (VOTE_ID + 1)))
                 .andExpect(status().isUnprocessableEntity());
     }
 }

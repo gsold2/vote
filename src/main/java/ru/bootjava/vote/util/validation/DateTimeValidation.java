@@ -13,17 +13,13 @@ public class DateTimeValidation {
 
     private int offsetTime = defaultOffsetTime;
 
-    public void checkTime() {
+    public void checkDateAndTime(Vote vote) {
+        if (!LocalDate.now().equals(vote.getDate())) {
+            throw new IllegalRequestDataException(vote.getDate() + " does not match the current date");
+        }
         LocalTime localTime = LocalTime.now();
         if (localTime.isAfter(LocalTime.of(offsetTime, 0))) {
             throw new IllegalRequestDataException(localTime + " is to later for voting");
-        }
-    }
-
-    public void checkDateAndTime(Vote vote) {
-        checkTime();
-        if (!LocalDate.now().equals(vote.getDate())) {
-            throw new IllegalRequestDataException(vote.getDate() + " does not match the current date");
         }
     }
 
