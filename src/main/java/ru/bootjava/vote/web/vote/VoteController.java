@@ -1,6 +1,5 @@
 package ru.bootjava.vote.web.vote;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
@@ -30,7 +29,6 @@ import java.util.List;
 
 import static ru.bootjava.vote.util.DateUtil.atEndDayOrMax;
 import static ru.bootjava.vote.util.DateUtil.atStartDayOrMin;
-import static ru.bootjava.vote.util.validation.ValidationUtil.assureIdConsistent;
 
 @RestController
 @RequestMapping(value = VoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -81,13 +79,11 @@ public class VoteController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(allEntries = true)
-    public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Vote vote, @PathVariable int id) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull int restaurantId, @PathVariable int id) {
         int userId = authUser.id();
+        Vote vote = voteRepository.getExistedAndBelonged(userId, id);
         log.info("update {} for user {}", vote, userId);
-        assureIdConsistent(vote, id);
-        voteRepository.getExistedAndBelonged(userId, id);
         dateTimeValidation.checkDateAndTime(vote);
-        int restaurantId = vote.getRestaurant().id();
         restaurantRepository.getExisted(restaurantId);
         service.save(userId, restaurantId, vote);
     }

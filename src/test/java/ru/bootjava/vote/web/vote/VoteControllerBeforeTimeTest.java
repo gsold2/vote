@@ -8,15 +8,15 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.bootjava.vote.model.Vote;
-import ru.bootjava.vote.util.JsonUtil;
 import ru.bootjava.vote.util.validation.DateTimeValidation;
 import ru.bootjava.vote.web.user.UserTestData;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.bootjava.vote.web.restaurant.RestaurantTestData.NOT_EXISTED_RESTAURANT_ID;
+import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant1;
 import static ru.bootjava.vote.web.user.UserTestData.ADMIN_MAIL;
 import static ru.bootjava.vote.web.vote.VoteTestData.*;
 
@@ -40,8 +40,8 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
     void updateValidTime() throws Exception {
         Vote updated = getUpdated();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 2))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .param("restaurantId", String.valueOf(restaurant1.id()))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
         VOTE_MATCHER.assertMatch(voteRepository.getExisted(VOTE_ID + 2), updated);
@@ -50,23 +50,28 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalidDate() throws Exception {
-        Vote invalid = getUpdated();
-        invalid.setDate(LocalDate.parse("2020-01-30"));
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 2))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 1))
+                .param("restaurantId", String.valueOf(restaurant1.id()))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void updateInvalidRestaurant() throws Exception {
-        Vote invalid = getUpdated();
-        invalid.setRestaurant(null);
+    void updateNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + NOT_EXISTED_VOTE_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("restaurantId", String.valueOf(restaurant1.id())))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void updateInvalid() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 2))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
-                .andExpect(status().isInternalServerError());
+                .param("restaurantId", String.valueOf(NOT_EXISTED_RESTAURANT_ID)))
+                .andExpect(status().isNotFound());
     }
 
     @Test
