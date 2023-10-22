@@ -10,8 +10,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.bootjava.vote.model.MenuItem;
 import ru.bootjava.vote.repository.MenuItemRepository;
-import ru.bootjava.vote.util.JsonUtil;
-import ru.bootjava.vote.util.MenuItemUtil;
 import ru.bootjava.vote.web.AbstractControllerTest;
 
 import java.time.LocalDate;
@@ -21,9 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.bootjava.vote.web.dish.DishTestData.dish1;
-import static ru.bootjava.vote.web.dish.DishTestData.dish2;
+import static ru.bootjava.vote.web.dish.DishTestData.*;
 import static ru.bootjava.vote.web.menuItem.MenuItemController.REST_URL;
+import static ru.bootjava.vote.web.menuItem.MenuItemTestData.getNew;
+import static ru.bootjava.vote.web.menuItem.MenuItemTestData.getUpdated;
 import static ru.bootjava.vote.web.menuItem.MenuItemTestData.*;
 import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant1;
 import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant2;
@@ -63,6 +62,17 @@ public class MenuItemControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    void getAllByRestaurantAndDate() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "filter")
+                .param("restaurantId", String.valueOf(restaurant1.id()))
+                .param("date", String.valueOf(menuItem1.getDate())))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MENU_ITEM_MATCHER.contentJson(menuItems));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + MENU_ITEM_ID))
                 .andExpect(status().isNoContent());
@@ -71,7 +81,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void deleteDataConflict() throws Exception {
+    void deleteNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_EXISTED_MENU_ITEM_ID))
                 .andExpect(status().isConflict());
     }
@@ -80,12 +90,55 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
         MenuItem updated = getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + MENU_ITEM_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (MENU_ITEM_ID + 3))
+                .param("dishId", String.valueOf(dish2.id()))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        MENU_ITEM_MATCHER.assertMatch(menuItemRepository.getExisted(MENU_ITEM_ID), updated);
+        MenuItem existed = menuItemRepository.getExisted(MENU_ITEM_ID + 3);
+        MENU_ITEM_MATCHER.assertMatch(existed, updated);
+        DISH_MATCHER.assertMatch(existed.getDish(), dish2);
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void updateNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + NOT_EXISTED_MENU_ITEM_ID)
+                .param("dishId", String.valueOf(dish2.id()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void updateInvalid() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (MENU_ITEM_ID + 3))
+                .param("dishId", String.valueOf(NOT_EXISTED_DISH_ID))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    @WithUserDetails(value = ADMIN_MAIL)
+    void updateDuplicate() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + MENU_ITEM_ID)
+                .param("dishId", String.valueOf(dish2.id()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void updateIsNotConsistent() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + MENU_ITEM_ID)
+                .param("dishId", String.valueOf(DISH_ID + 2))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -94,8 +147,8 @@ public class MenuItemControllerTest extends AbstractControllerTest {
         MenuItem newMenuItem = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(MenuItemController.REST_URL)
                 .param("dishId", String.valueOf(dish2.id()))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newMenuItem)));
+                .param("date", String.valueOf(LocalDate.now()))
+                .contentType(MediaType.APPLICATION_JSON));
 
         MenuItem created = MENU_ITEM_MATCHER.readFromJson(action);
         int newId = created.id();
@@ -106,46 +159,22 @@ public class MenuItemControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getAllByRestaurantAndDate() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "filter")
-                .param("restaurantId", String.valueOf(restaurant1.id()))
-                .param("date", String.valueOf(menuItem1.getDate())))
+    void createNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.post(MenuItemController.REST_URL + NOT_EXISTED_MENU_ITEM_ID)
+                .param("dishId", String.valueOf(dish2.id()))
+                .param("date", String.valueOf(LocalDate.now()))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(MENU_ITEM_TO_MATCHER.contentJson(MenuItemUtil.getTos(menuItems)));
+                .andExpect(status().isNotFound());
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
-        MenuItem invalid = new MenuItem(null, null);
         perform(MockMvcRequestBuilders.post(MenuItemController.REST_URL)
-                .param("dishId", String.valueOf(dish1.id()))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void updateInvalid() throws Exception {
-        MenuItem invalid = new MenuItem(MENU_ITEM_ID, null);
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + MENU_ITEM_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @Transactional(propagation = Propagation.NEVER)
-    @WithUserDetails(value = ADMIN_MAIL)
-    void updateDuplicate() throws Exception {
-        MenuItem invalid = new MenuItem(MENU_ITEM_ID, LocalDate.now());
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + MENU_ITEM_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
+                .param("dishId", String.valueOf(NOT_EXISTED_DISH_ID))
+                .param("date", String.valueOf(LocalDate.now()))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
@@ -153,11 +182,10 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicate() throws Exception {
-        MenuItem invalid = new MenuItem(null, menuItem1.getDate());
         perform(MockMvcRequestBuilders.post(MenuItemController.REST_URL)
                 .param("dishId", String.valueOf(dish1.id()))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
+                .param("date", String.valueOf(LocalDate.now()))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
@@ -188,6 +216,6 @@ public class MenuItemControllerTest extends AbstractControllerTest {
                 .param("date", String.valueOf(LocalDate.now()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isConflict());
+                .andExpect(status().isUnprocessableEntity());
     }
 }

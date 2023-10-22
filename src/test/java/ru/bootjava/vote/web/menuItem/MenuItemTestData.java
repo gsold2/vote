@@ -1,7 +1,6 @@
 package ru.bootjava.vote.web.menuItem;
 
 import ru.bootjava.vote.model.MenuItem;
-import ru.bootjava.vote.to.MenuItemTo;
 import ru.bootjava.vote.web.MatcherFactory;
 
 import java.time.LocalDate;
@@ -9,7 +8,6 @@ import java.util.List;
 
 public class MenuItemTestData {
     public static final MatcherFactory.Matcher<MenuItem> MENU_ITEM_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(MenuItem.class, "restaurant", "dish");
-    public static final MatcherFactory.Matcher<MenuItemTo> MENU_ITEM_TO_MATCHER = MatcherFactory.usingEqualsComparator(MenuItemTo.class);
 
     public static final int MENU_ITEM_ID = 1;
     public static final int NOT_EXISTED_MENU_ITEM_ID = 20;
@@ -24,6 +22,6 @@ public class MenuItemTestData {
     }
 
     public static MenuItem getUpdated() {
-        return new MenuItem(MENU_ITEM_ID, LocalDate.parse("2020-02-01"));
+        return new MenuItem(MENU_ITEM_ID + 3, LocalDate.now());
     }
 }

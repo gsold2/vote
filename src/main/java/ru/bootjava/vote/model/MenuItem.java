@@ -26,7 +26,6 @@ public class MenuItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dish_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private Dish dish;
 
     @ManyToOne(fetch = FetchType.LAZY)
