@@ -59,7 +59,7 @@ public class RestaurantController {
         return RestaurantsUtil.getTos(repository.getAll(authUser.id()));
     }
 
-    @GetMapping("/filter")
+    @GetMapping("/with-menu-up-today")
     public List<Restaurant> getAllWithMenuUpToday(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get all restaurants with menu for user {} up today", authUser.id());
         return repository.getAllWithMenuUpToday(authUser.id());
