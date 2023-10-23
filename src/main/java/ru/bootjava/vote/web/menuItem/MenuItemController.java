@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.bootjava.vote.error.IllegalRequestDataException;
 import ru.bootjava.vote.model.MenuItem;
+import ru.bootjava.vote.model.Restaurant;
 import ru.bootjava.vote.repository.DishRepository;
 import ru.bootjava.vote.repository.MenuItemRepository;
 import ru.bootjava.vote.repository.RestaurantRepository;
@@ -70,8 +71,9 @@ public class MenuItemController {
         int userId = authUser.id();
         MenuItem menuItem = menuItemRepository.getExistedAndBelonged(userId, id);
         log.info("update {} for user {}", menuItem, userId);
+        Restaurant restaurant = menuItem.getDish().getRestaurant();
         int restaurantIdFromDish = dishRepository.getExistedAndBelonged(userId, dishId).getRestaurant().id();
-        assureIdConsistent(menuItem.getRestaurant(), restaurantIdFromDish);
+        assureIdConsistent(restaurant, restaurantIdFromDish);
         service.save(dishId, menuItem);
     }
 

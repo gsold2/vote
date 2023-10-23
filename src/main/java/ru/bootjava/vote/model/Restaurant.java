@@ -1,7 +1,6 @@
 package ru.bootjava.vote.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,9 +24,10 @@ public class Restaurant extends NamedEntity {
     @JsonIgnore
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY)//, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("date DESC")
-    @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
+    @JoinColumn(name = "restaurant_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<MenuItem> menuItems;
 

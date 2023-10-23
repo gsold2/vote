@@ -1,6 +1,5 @@
 package ru.bootjava.vote.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -27,12 +26,6 @@ public class MenuItem extends BaseEntity {
     @JoinColumn(name = "dish_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Dish dish;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Restaurant restaurant;
 
     public MenuItem(Integer id, LocalDate date) {
         super(id);

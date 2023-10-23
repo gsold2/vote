@@ -22,7 +22,6 @@ public class MenuItemService {
     public MenuItem save(int dishId, MenuItem menuItem) {
         Dish existed = dishRepository.getExisted(dishId);
         menuItem.setDish(existed);
-        menuItem.setRestaurant(existed.getRestaurant());
         return menuItemRepository.save(menuItem);
     }
 
@@ -32,7 +31,6 @@ public class MenuItemService {
         for (MenuItem menuItem : menuItems) {
             MenuItem clone = new MenuItem(null, LocalDate.now());
             clone.setDish(menuItem.getDish());
-            clone.setRestaurant(menuItem.getRestaurant());
             clones.add(clone);
         }
         return menuItemRepository.saveAll(clones);
