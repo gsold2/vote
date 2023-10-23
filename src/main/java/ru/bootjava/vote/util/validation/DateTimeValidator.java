@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Component
-public class DateTimeValidation {
+public class DateTimeValidator {
     public static final int defaultOffsetTime = 11;
 
     private int offsetTime = defaultOffsetTime;

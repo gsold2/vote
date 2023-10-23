@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.bootjava.vote.util.validation.DateTimeValidation;
+import ru.bootjava.vote.util.validation.DateTimeValidator;
 
 import java.time.LocalTime;
 
@@ -19,16 +19,16 @@ import static ru.bootjava.vote.web.vote.VoteTestData.VOTE_ID;
 public class VoteControllerAfterTimeTest extends BaseVoteControllerTest {
 
     @Autowired
-    DateTimeValidation dateTimeValidation;
+    DateTimeValidator dateTimeValidator;
 
     @BeforeEach
     void beforeEach() {
-        dateTimeValidation.setOffsetTime(LocalTime.now().getHour());
+        dateTimeValidator.setOffsetTime(LocalTime.now().getHour());
     }
 
     @AfterEach
     void afterEach() {
-        dateTimeValidation.setOffsetTime(DateTimeValidation.defaultOffsetTime);
+        dateTimeValidator.setOffsetTime(DateTimeValidator.defaultOffsetTime);
     }
 
     @Test
