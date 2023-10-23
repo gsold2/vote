@@ -12,7 +12,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.bootjava.vote.error.IllegalRequestDataException;
 import ru.bootjava.vote.model.MenuItem;
 import ru.bootjava.vote.model.Restaurant;
 import ru.bootjava.vote.repository.DishRepository;
@@ -25,6 +24,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
+import static ru.bootjava.vote.util.validation.MenuItemValidator.checkThatMenuEmpty;
 import static ru.bootjava.vote.util.validation.ValidationUtil.assureIdConsistent;
 
 @RestController
@@ -101,9 +101,8 @@ public class MenuItemController {
         int userId = authUser.id();
         log.info("clone menu items for {} and user {} with date {}", restaurantId, userId, date);
         restaurantRepository.getExistedAndBelonged(userId, restaurantId);
-        if (menuItemRepository.getAllByRestaurantAndDate(userId, restaurantId, LocalDate.now()).size() > 0) {
-            throw new IllegalRequestDataException("Restaurant id=" + restaurantId + " already has menuItems up today. This method is not applicable.");
-        }
+        List<MenuItem> menuUpToday = menuItemRepository.getAllByRestaurantAndDate(userId, restaurantId, LocalDate.now());
+        checkThatMenuEmpty(menuUpToday, restaurantId);
         List<MenuItem> menuItems = menuItemRepository.getAllByRestaurantAndDate(userId, restaurantId, date);
         List<MenuItem> created = service.saveAll(menuItems);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
