@@ -57,21 +57,6 @@ public class DishControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + DISH_ID))
-                .andExpect(status().isNoContent());
-        assertFalse(dishRepository.get(UserTestData.ADMIN_ID, DISH_ID).isPresent());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void deleteDataConflict() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_EXISTED_DISH_ID))
-                .andExpect(status().isConflict());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
         Dish updated = getUpdated();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + DISH_ID)

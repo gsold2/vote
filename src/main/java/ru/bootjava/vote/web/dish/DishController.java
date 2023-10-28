@@ -45,15 +45,6 @@ public class DishController {
         return ResponseEntity.of(dishRepository.get(authUser.id(), id));
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(allEntries = true)
-    public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
-        log.info("delete {} for user {}", id, authUser.id());
-        Dish dish = dishRepository.getExistedAndBelonged(authUser.id(), id);
-        dishRepository.delete(dish);
-    }
-
     @GetMapping
     @Cacheable(key="#restaurantId")
     public List<DishTo> getAllByRestaurant(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull int restaurantId) {
