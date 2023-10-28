@@ -3,7 +3,6 @@ package ru.bootjava.vote.web.user;
 import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -31,14 +30,6 @@ public class AdminUserController extends AbstractUserController {
     @GetMapping("/{id}")
     public User get(@PathVariable int id) {
         return super.get(id);
-    }
-
-    @Override
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(allEntries = true)
-    public void delete(@PathVariable int id) {
-        super.delete(id);
     }
 
     @GetMapping
@@ -69,7 +60,7 @@ public class AdminUserController extends AbstractUserController {
     }
 
     @GetMapping("/by-email")
-    @Cacheable(key="#email")
+    @Cacheable(key = "#email")
     public User getByEmail(@RequestParam String email) {
         log.info("getByEmail {}", email);
         return repository.getExistedByEmail(email);

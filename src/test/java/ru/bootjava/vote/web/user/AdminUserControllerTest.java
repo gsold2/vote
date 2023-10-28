@@ -58,23 +58,6 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + USER_ID))
-                .andDo(print())
-                .andExpect(status().isNoContent());
-        assertFalse(repository.findById(USER_ID).isPresent());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void deleteNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_FOUND))
-                .andDo(print())
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
     void enableNotFound() throws Exception {
         perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + NOT_FOUND)
                 .param("enabled", "false")

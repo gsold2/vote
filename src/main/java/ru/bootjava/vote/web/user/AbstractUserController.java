@@ -27,9 +27,4 @@ public abstract class AbstractUserController {
         log.info("get {}", id);
         return repository.getExisted(id);
     }
-
-    public void delete(int id) {
-        log.info("delete {}", id);
-        repository.deleteExisted(id);
-    }
 }
