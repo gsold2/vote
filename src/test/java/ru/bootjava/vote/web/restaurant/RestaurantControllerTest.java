@@ -57,21 +57,6 @@ public class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + RESTAURANT_ID))
-                .andExpect(status().isNoContent());
-        assertFalse(restaurantRepository.get(UserTestData.ADMIN_ID, RESTAURANT_ID).isPresent());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void deleteDataConflict() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_EXISTED_RESTAURANT_ID))
-                .andExpect(status().isConflict());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
         Restaurant updated = getUpdated();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT_ID)
