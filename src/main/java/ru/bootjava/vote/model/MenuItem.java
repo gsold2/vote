@@ -1,5 +1,6 @@
 package ru.bootjava.vote.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -23,6 +24,11 @@ public class MenuItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dish_id")
     private Dish dish;
+
+    @Column(name = "restaurant_id", nullable = false)
+    @NotNull
+    @JsonIgnore
+    private Integer restaurantId;
 
     public MenuItem(Integer id, LocalDate date) {
         super(id);
