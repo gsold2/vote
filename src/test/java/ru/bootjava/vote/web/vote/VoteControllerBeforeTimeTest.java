@@ -15,9 +15,9 @@ import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.bootjava.vote.web.restaurant.RestaurantTestData.NOT_EXISTED_RESTAURANT_ID;
-import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant1;
+import static ru.bootjava.vote.web.restaurant.RestaurantTestData.*;
 import static ru.bootjava.vote.web.user.UserTestData.ADMIN_MAIL;
+import static ru.bootjava.vote.web.vote.VoteTestData.getUpdated;
 import static ru.bootjava.vote.web.vote.VoteTestData.*;
 
 public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
@@ -44,7 +44,9 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        VOTE_MATCHER.assertMatch(voteRepository.getExisted(VOTE_ID + 2), updated);
+        Vote existed = voteRepository.getExisted(VOTE_ID + 2);
+        VOTE_MATCHER.assertMatch(existed, updated);
+        RESTAURANT_MATCHER.assertMatch(existed.getRestaurant(), restaurant1);
     }
 
     @Test

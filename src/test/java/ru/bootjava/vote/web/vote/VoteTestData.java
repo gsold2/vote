@@ -8,8 +8,6 @@ import ru.bootjava.vote.web.MatcherFactory;
 import java.time.LocalDate;
 import java.util.List;
 
-import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant2;
-
 public class VoteTestData {
     public static final MatcherFactory.Matcher<Vote> VOTE_MATCHER = MatcherFactory.usingEqualsComparator(Vote.class);
     public static final MatcherFactory.Matcher<VoteTo> VOTE_TO_MATCHER = MatcherFactory.usingEqualsComparator(VoteTo.class);
@@ -28,9 +26,7 @@ public class VoteTestData {
     }
 
     public static Vote getUpdated() {
-        Vote vote = new Vote(VOTE_ID + 2, getDate());
-        vote.setRestaurant(restaurant2);
-        return vote;
+        return new Vote(VOTE_ID + 2, getDate());
     }
 
     private static LocalDate getDate() {
