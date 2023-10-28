@@ -64,7 +64,7 @@ public class MenuItemController {
         return menuItemRepository.getAllByRestaurantAndDate(authUser.id(), restaurantId, date);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull int dishId, @PathVariable int id) {
@@ -77,7 +77,7 @@ public class MenuItemController {
         service.save(dishId, menuItem);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping()
     @CacheEvict(allEntries = true)
     public ResponseEntity<MenuItem> createWithLocation(@AuthenticationPrincipal AuthUser authUser,
                                                        @RequestParam @NonNull LocalDate date,

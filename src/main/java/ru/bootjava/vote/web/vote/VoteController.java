@@ -76,7 +76,7 @@ public class VoteController {
         return VoteUtil.getTos(votesDateFiltered);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull int restaurantId, @PathVariable int id) {
