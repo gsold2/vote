@@ -1,6 +1,5 @@
 package ru.bootjava.vote.web.restaurant;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
@@ -9,6 +8,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,9 +21,6 @@ import ru.bootjava.vote.web.AuthUser;
 
 import java.net.URI;
 import java.util.List;
-
-import static ru.bootjava.vote.util.validation.ValidationUtil.assureIdConsistent;
-import static ru.bootjava.vote.util.validation.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,7 +41,7 @@ public class RestaurantController {
     }
 
     @GetMapping
-    @Cacheable(key="#authUser.authUser().id")
+    @Cacheable(key = "#authUser.authUser().id")
     public List<RestaurantTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get all restaurants for user {}", authUser.id());
         return RestaurantsUtil.getTos(repository.getAll(authUser.id()));
@@ -56,23 +53,23 @@ public class RestaurantController {
         return repository.getAllWithMenuUpToday(authUser.id());
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(allEntries = true)
-    public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull String name, @PathVariable int id) {
         int userId = authUser.id();
+        Restaurant restaurant = repository.getExistedAndBelonged(userId, id);
         log.info("update {} for user {}", restaurant, userId);
-        assureIdConsistent(restaurant, id);
-        repository.getExistedAndBelonged(userId, id);
+        restaurant.setName(name);
         service.save(userId, restaurant);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping()
     @CacheEvict(allEntries = true)
-    public ResponseEntity<Restaurant> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Restaurant restaurant) {
+    public ResponseEntity<Restaurant> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull String name) {
         int userId = authUser.id();
+        Restaurant restaurant = new Restaurant(null, name);
         log.info("create {} for user {}", restaurant, userId);
-        checkNew(restaurant);
         Restaurant created = service.save(userId, restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")

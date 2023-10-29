@@ -60,7 +60,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
         Restaurant updated = getUpdated();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .param("name", updated.getName()))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -72,6 +72,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
     void createWithLocation() throws Exception {
         Restaurant newRestaurant = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+                .param("name", newRestaurant.getName())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newRestaurant)));
 
@@ -105,32 +106,31 @@ public class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
-        Restaurant invalid = new Restaurant(null, null);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
+                .param("name", "1"))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalid() throws Exception {
-        Restaurant invalid = new Restaurant(RESTAURANT_ID, null);
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
+                .param("name", "1"))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateHtmlUnsafe() throws Exception {
-        Restaurant invalid = new Restaurant(RESTAURANT_ID, "<script>alert(123)</script>");
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
+                .param("name", "<script>alert(123)</script>"))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -139,10 +139,9 @@ public class RestaurantControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicate() throws Exception {
-        Restaurant invalid = new Restaurant(RESTAURANT_ID, restaurant2.getName());
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
+                .param("name", restaurant2.getName()))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
@@ -151,11 +150,20 @@ public class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicate() throws Exception {
-        Restaurant invalid = new Restaurant(null, "restaurant_1");
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(invalid)))
+                .param("name", "restaurant_1"))
                 .andDo(print())
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void createHtmlUnsafe() throws Exception {
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "<script>alert(123)</script>"))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.firewall.RequestRejectedException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -30,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.nio.file.AccessDeniedException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import static ru.bootjava.vote.error.ErrorType.*;
@@ -63,12 +65,18 @@ public class RestExceptionHandler {
             put(FileNotFoundException.class, BAD_REQUEST);
             put(AccessDeniedException.class, FORBIDDEN);
             put(AuthenticationException.class, UNAUTHORIZED);
+            put(TransactionSystemException.class, BAD_REQUEST);
         }
     };
 
     @ExceptionHandler(BindException.class)
     public ProblemDetail bindException(BindException ex, HttpServletRequest request) {
         return processException(ex, request, Map.of("invalid_params", getErrorMap(ex.getBindingResult())));
+    }
+
+    @ExceptionHandler(TransactionSystemException.class)
+    public ProblemDetail transactionSystemException(TransactionSystemException ex, HttpServletRequest request) {
+        return processException(new TransactionSystemException(Objects.requireNonNull(ex.getRootCause()).getMessage()), request, Map.of());
     }
 
     //   https://howtodoinjava.com/spring-mvc/spring-problemdetail-errorresponse/#5-adding-problemdetail-to-custom-exceptions
