@@ -35,6 +35,7 @@ public class VoteControllerTest extends BaseVoteControllerTest {
     @Test
     void getUnauth() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + VOTE_ID))
+                .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
@@ -82,7 +83,6 @@ public class VoteControllerTest extends BaseVoteControllerTest {
         ResultActions action = perform(MockMvcRequestBuilders.post(VoteController.REST_URL)
                 .param("restaurantId", String.valueOf(restaurant1.id()))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isCreated());
 
         Vote created = VOTE_MATCHER.readFromJson(action);

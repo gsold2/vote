@@ -11,6 +11,7 @@ import ru.bootjava.vote.util.validation.DateTimeValidator;
 
 import java.time.LocalTime;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.bootjava.vote.web.restaurant.RestaurantTestData.restaurant1;
 import static ru.bootjava.vote.web.user.UserTestData.ADMIN_MAIL;
@@ -37,6 +38,7 @@ public class VoteControllerAfterTimeTest extends BaseVoteControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 2))
                 .param("restaurantId", String.valueOf(restaurant1.id()))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
 

@@ -42,6 +42,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     void getUnauth() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + RESTAURANT_ID))
+                .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
@@ -60,6 +61,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
+                .andDo(print())
                 .andExpect(status().isNoContent());
 
         RESTAURANT_MATCHER.assertMatch(restaurantRepository.getExisted(RESTAURANT_ID), updated);

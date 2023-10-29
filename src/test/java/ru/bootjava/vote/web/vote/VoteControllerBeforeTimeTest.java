@@ -14,6 +14,7 @@ import ru.bootjava.vote.web.user.UserTestData;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.bootjava.vote.web.restaurant.RestaurantTestData.*;
 import static ru.bootjava.vote.web.user.UserTestData.ADMIN_MAIL;
@@ -42,6 +43,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 2))
                 .param("restaurantId", String.valueOf(restaurant1.id()))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isNoContent());
 
         Vote existed = voteRepository.getExisted(VOTE_ID + 2);
@@ -55,6 +57,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 1))
                 .param("restaurantId", String.valueOf(restaurant1.id()))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -64,6 +67,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + NOT_EXISTED_VOTE_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("restaurantId", String.valueOf(restaurant1.id())))
+                .andDo(print())
                 .andExpect(status().isConflict());
     }
 
@@ -73,6 +77,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 2))
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("restaurantId", String.valueOf(NOT_EXISTED_RESTAURANT_ID)))
+                .andDo(print())
                 .andExpect(status().isNotFound());
     }
 

@@ -49,6 +49,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     @Test
     void getUnauth() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + MENU_ITEM_ID))
+                .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
@@ -94,6 +95,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (MENU_ITEM_ID + 3))
                 .param("dishId", String.valueOf(dish2.id()))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isNoContent());
 
         MenuItem existed = menuItemRepository.getExisted(MENU_ITEM_ID + 3);

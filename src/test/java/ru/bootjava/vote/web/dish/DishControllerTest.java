@@ -42,6 +42,7 @@ public class DishControllerTest extends AbstractControllerTest {
     @Test
     void getUnauth() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + DISH_ID))
+                .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
@@ -60,6 +61,7 @@ public class DishControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + DISH_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
+                .andDo(print())
                 .andExpect(status().isNoContent());
 
         DISH_MATCHER.assertMatch(dishRepository.getExisted(DISH_ID), updated);
