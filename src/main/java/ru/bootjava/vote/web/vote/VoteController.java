@@ -9,7 +9,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -79,7 +78,7 @@ public class VoteController {
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(allEntries = true)
-    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull int restaurantId, @PathVariable int id) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam int restaurantId, @PathVariable int id) {
         int userId = authUser.id();
         Vote vote = voteRepository.getExistedAndBelonged(userId, id);
         log.info("update {} for user {}", vote, userId);
@@ -91,7 +90,7 @@ public class VoteController {
     @PostMapping
     @CacheEvict(allEntries = true)
     public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser,
-                                                   @RequestParam @NonNull int restaurantId) {
+                                                   @RequestParam int restaurantId) {
         int userId = authUser.id();
         log.info("create for restaurant {} by user {}", restaurantId, userId);
         restaurantRepository.getExisted(restaurantId);

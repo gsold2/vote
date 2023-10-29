@@ -8,7 +8,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -58,8 +57,8 @@ public class MenuItemController {
     @GetMapping("/filter")
     @Cacheable(key = "{#restaurantId, #date}")
     public List<MenuItem> getAllByRestaurantAndDate(@AuthenticationPrincipal AuthUser authUser,
-                                                    @RequestParam @NonNull int restaurantId,
-                                                    @RequestParam @NonNull LocalDate date) {
+                                                    @RequestParam int restaurantId,
+                                                    @RequestParam LocalDate date) {
         log.info("get all menu items for the user {} and restaurant{} on date {}", authUser.id(), restaurantId, date);
         return menuItemRepository.getAllByRestaurantAndDate(authUser.id(), restaurantId, date);
     }
@@ -67,7 +66,7 @@ public class MenuItemController {
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(allEntries = true)
-    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull int dishId, @PathVariable int id) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam int dishId, @PathVariable int id) {
         int userId = authUser.id();
         MenuItem menuItem = menuItemRepository.getExistedAndBelonged(userId, id);
         log.info("update {} for user {}", menuItem, userId);
@@ -80,8 +79,8 @@ public class MenuItemController {
     @PostMapping()
     @CacheEvict(allEntries = true)
     public ResponseEntity<MenuItem> createWithLocation(@AuthenticationPrincipal AuthUser authUser,
-                                                       @RequestParam @NonNull LocalDate date,
-                                                       @RequestParam @NonNull int dishId) {
+                                                       @RequestParam LocalDate date,
+                                                       @RequestParam int dishId) {
         int userId = authUser.id();
         MenuItem menuItem = new MenuItem(null, date);
         log.info("create {} for dish {} by user {}", menuItem, dishId, userId);
@@ -96,8 +95,8 @@ public class MenuItemController {
     @PostMapping(value = "/copy-up-today")
     @CacheEvict(allEntries = true)
     public ResponseEntity<List<MenuItem>> multipleCreationWithLocationUpToday(@AuthenticationPrincipal AuthUser authUser,
-                                                                              @RequestParam @NonNull Integer restaurantId,
-                                                                              @RequestParam @NonNull LocalDate date) {
+                                                                              @RequestParam Integer restaurantId,
+                                                                              @RequestParam LocalDate date) {
         int userId = authUser.id();
         log.info("clone menu items for {} and user {} with date {}", restaurantId, userId, date);
         restaurantRepository.getExistedAndBelonged(userId, restaurantId);

@@ -9,7 +9,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -46,8 +45,8 @@ public class DishController {
     }
 
     @GetMapping
-    @Cacheable(key="#restaurantId")
-    public List<DishTo> getAllByRestaurant(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull int restaurantId) {
+    @Cacheable(key = "#restaurantId")
+    public List<DishTo> getAllByRestaurant(@AuthenticationPrincipal AuthUser authUser, @RequestParam int restaurantId) {
         log.info("get all dishes for restaurant {} and user {}", restaurantId, authUser.id());
         return DishUtil.getTos(dishRepository.getAllByRestaurant(authUser.id(), restaurantId));
     }
@@ -67,7 +66,7 @@ public class DishController {
     @CacheEvict(allEntries = true)
     public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser,
                                                    @Valid @RequestBody Dish dish,
-                                                   @RequestParam @NonNull int restaurantId) {
+                                                   @RequestParam int restaurantId) {
         int userId = authUser.id();
         log.info("create {} for restaurant {} and user {}", dish, restaurantId, userId);
         checkNew(dish);

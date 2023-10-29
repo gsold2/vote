@@ -8,7 +8,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -56,7 +55,7 @@ public class RestaurantController {
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(allEntries = true)
-    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull String name, @PathVariable int id) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam String name, @PathVariable int id) {
         int userId = authUser.id();
         Restaurant restaurant = repository.getExistedAndBelonged(userId, id);
         log.info("update {} for user {}", restaurant, userId);
@@ -66,7 +65,7 @@ public class RestaurantController {
 
     @PostMapping()
     @CacheEvict(allEntries = true)
-    public ResponseEntity<Restaurant> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestParam @NonNull String name) {
+    public ResponseEntity<Restaurant> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestParam String name) {
         int userId = authUser.id();
         Restaurant restaurant = new Restaurant(null, name);
         log.info("create {} for user {}", restaurant, userId);
