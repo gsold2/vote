@@ -13,9 +13,7 @@ import ru.bootjava.vote.repository.DishRepository;
 import ru.bootjava.vote.util.DishUtil;
 import ru.bootjava.vote.util.JsonUtil;
 import ru.bootjava.vote.web.AbstractControllerTest;
-import ru.bootjava.vote.web.user.UserTestData;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -90,6 +88,7 @@ public class DishControllerTest extends AbstractControllerTest {
                 .param("restaurantId", String.valueOf(restaurant1.id())))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(DISH_TO_MATCHER.contentJson(DishUtil.getTos(dishes)));
     }
 

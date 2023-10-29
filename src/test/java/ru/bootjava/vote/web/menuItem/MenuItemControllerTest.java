@@ -68,6 +68,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
                 .param("date", String.valueOf(menuItem1.getDate())))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MENU_ITEM_MATCHER.contentJson(menuItems));
     }
 

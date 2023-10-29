@@ -12,11 +12,9 @@ import ru.bootjava.vote.model.Restaurant;
 import ru.bootjava.vote.repository.RestaurantRepository;
 import ru.bootjava.vote.util.JsonUtil;
 import ru.bootjava.vote.web.AbstractControllerTest;
-import ru.bootjava.vote.web.user.UserTestData;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -98,6 +96,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "with-menu-up-today"))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RESTAURANT_MATCHER.contentJson(List.of(restaurant1)));
     }
 
