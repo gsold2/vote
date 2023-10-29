@@ -67,7 +67,7 @@ public class VoteControllerTest extends BaseVoteControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void getBetweenWithInclusion() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL)
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "filter")
                 .param("startDate", String.valueOf(vote1.getDate()))
                 .param("endDate", String.valueOf(LocalDate.now())))
                 .andExpect(status().isOk())
