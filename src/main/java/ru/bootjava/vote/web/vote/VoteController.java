@@ -19,7 +19,6 @@ import ru.bootjava.vote.repository.VoteRepository;
 import ru.bootjava.vote.service.VoteService;
 import ru.bootjava.vote.to.VoteTo;
 import ru.bootjava.vote.util.VoteUtil;
-import ru.bootjava.vote.util.validation.DateTimeValidator;
 import ru.bootjava.vote.web.AuthUser;
 
 import java.net.URI;
@@ -37,7 +36,6 @@ import static ru.bootjava.vote.util.DateUtil.atStartDayOrMin;
 public class VoteController {
     static final String REST_URL = "/api/user/votes";
 
-    private final DateTimeValidator dateTimeValidator;
     private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
     private final VoteService service;
@@ -54,8 +52,7 @@ public class VoteController {
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("delete {} for user {}", id, authUser.id());
         Vote vote = voteRepository.getExistedAndBelonged(authUser.id(), id);
-        dateTimeValidator.checkDateAndTime(vote);
-        voteRepository.delete(vote);
+        service.delete(vote);
     }
 
     @GetMapping
@@ -82,9 +79,8 @@ public class VoteController {
         int userId = authUser.id();
         Vote vote = voteRepository.getExistedAndBelonged(userId, id);
         log.info("update {} for user {}", vote, userId);
-        dateTimeValidator.checkDateAndTime(vote);
         restaurantRepository.getExisted(restaurantId);
-        service.save(userId, restaurantId, vote);
+        service.update(userId, restaurantId, vote);
     }
 
     @PostMapping

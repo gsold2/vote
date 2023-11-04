@@ -3,6 +3,7 @@ package ru.bootjava.vote.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.bootjava.vote.error.IllegalRequestDataException;
 import ru.bootjava.vote.model.Dish;
 import ru.bootjava.vote.model.MenuItem;
 import ru.bootjava.vote.repository.DishRepository;
@@ -27,7 +28,11 @@ public class MenuItemService {
     }
 
     @Transactional
-    public List<MenuItem> saveAll(List<MenuItem> menuItems) {
+    public List<MenuItem> copyUpToday(Integer userId, Integer restaurantId, LocalDate date) {
+        if (menuItemRepository.getAllByRestaurantAndDate(userId, restaurantId, LocalDate.now()).size() > 0) {
+            throw new IllegalRequestDataException("Restaurant id=" + restaurantId + " already has menuItems up today. This method is not applicable.");
+        }
+        List<MenuItem> menuItems = menuItemRepository.getAllByRestaurantAndDate(userId, restaurantId, date);
         List<MenuItem> clones = new ArrayList<>();
         for (MenuItem menuItem : menuItems) {
             MenuItem clone = new MenuItem(null, LocalDate.now());

@@ -23,7 +23,6 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
-import static ru.bootjava.vote.util.validation.MenuItemValidator.checkThatMenuEmpty;
 import static ru.bootjava.vote.util.validation.ValidationUtil.assureIdConsistent;
 
 @RestController
@@ -100,10 +99,7 @@ public class MenuItemController {
         int userId = authUser.id();
         log.info("clone menu items for {} and user {} with date {}", restaurantId, userId, date);
         restaurantRepository.getExistedAndBelonged(userId, restaurantId);
-        List<MenuItem> menuUpToday = menuItemRepository.getAllByRestaurantAndDate(userId, restaurantId, LocalDate.now());
-        checkThatMenuEmpty(menuUpToday, restaurantId);
-        List<MenuItem> menuItems = menuItemRepository.getAllByRestaurantAndDate(userId, restaurantId, date);
-        List<MenuItem> created = service.saveAll(menuItems);
+        List<MenuItem> created = service.copyUpToday(userId, restaurantId, date);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/filter?restaurantId={restaurantId}&date={date}")
                 .buildAndExpand(restaurantId, LocalDate.now()).toUri();

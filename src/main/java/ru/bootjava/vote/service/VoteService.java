@@ -7,11 +7,12 @@ import ru.bootjava.vote.model.Vote;
 import ru.bootjava.vote.repository.RestaurantRepository;
 import ru.bootjava.vote.repository.UserRepository;
 import ru.bootjava.vote.repository.VoteRepository;
+import ru.bootjava.vote.util.validation.DateTimeValidator;
 
 @Service
 @AllArgsConstructor
 public class VoteService {
-
+    private final DateTimeValidator dateTimeValidator;
     private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
@@ -21,5 +22,16 @@ public class VoteService {
         vote.setUser(userRepository.getExisted(userId));
         vote.setRestaurant(restaurantRepository.getExisted(restaurantId));
         return voteRepository.save(vote);
+    }
+
+    @Transactional
+    public void update(int userId, int restaurantId, Vote vote) {
+        dateTimeValidator.checkDateAndTime(vote);
+        save(userId, restaurantId, vote);
+    }
+
+    public void delete(Vote vote) {
+        dateTimeValidator.checkDateAndTime(vote);
+        voteRepository.delete(vote);
     }
 }
