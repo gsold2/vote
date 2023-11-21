@@ -37,7 +37,7 @@ spring:
 logging:
   level:
     root: WARN
-    ru.bootjava.vote: DEBUG
+    com.github.gsold2.vote: DEBUG
     org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
 
 server.servlet:
