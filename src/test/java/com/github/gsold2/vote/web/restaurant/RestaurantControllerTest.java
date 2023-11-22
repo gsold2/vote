@@ -19,6 +19,7 @@ import static com.github.gsold2.vote.util.RestaurantsUtil.getTos;
 import static com.github.gsold2.vote.web.restaurant.RestaurantController.REST_URL;
 import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.*;
 import static com.github.gsold2.vote.web.user.UserTestData.ADMIN_MAIL;
+import static com.github.gsold2.vote.web.user.UserTestData.USER_MAIL;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -95,8 +96,18 @@ public class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getAllWithMenuUpToday() throws Exception {
+    void getAllWithMenuUpTodayByAdmin() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "with-menu-up-today"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_MATCHER.contentJson(List.of(restaurant1)));
+    }
+
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void getAllWithMenuUpTodayByUser() throws Exception {
+        perform(MockMvcRequestBuilders.get("/api/user/restaurants/with-menu-up-today"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

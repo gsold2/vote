@@ -22,7 +22,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
 @CacheConfig(cacheNames = "restaurants")
@@ -33,26 +33,26 @@ public class RestaurantController {
     private final RestaurantRepository repository;
     private final RestaurantService service;
 
-    @GetMapping("/{id}")
+    @GetMapping(REST_URL + "/{id}")
     public ResponseEntity<Restaurant> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("get restaurant {} for user {}", id, authUser.id());
         return ResponseEntity.of(repository.get(authUser.id(), id));
     }
 
-    @GetMapping
+    @GetMapping(REST_URL)
     @Cacheable(key = "#authUser.authUser().id")
     public List<RestaurantTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get all restaurants for user {}", authUser.id());
         return RestaurantsUtil.getTos(repository.getAll(authUser.id()));
     }
 
-    @GetMapping("/with-menu-up-today")
+    @GetMapping(value = {"/api/user/restaurants/with-menu-up-today", "/api/admin/restaurants/with-menu-up-today"})
     public List<Restaurant> getAllWithMenuUpToday(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get all restaurants with menu for user {} up today", authUser.id());
-        return repository.getAllWithMenuUpToday(authUser.id());
+        return repository.getAllWithMenuUpToday();
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(REST_URL + "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam String name, @PathVariable int id) {
@@ -63,7 +63,7 @@ public class RestaurantController {
         service.save(userId, restaurant);
     }
 
-    @PostMapping()
+    @PostMapping(REST_URL)
     @CacheEvict(allEntries = true)
     public ResponseEntity<Restaurant> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestParam String name) {
         int userId = authUser.id();
