@@ -44,15 +44,15 @@ public class VoteControllerAfterTimeTest extends BaseVoteControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void deleteInvalidTime() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + (VOTE_ID + 2)))
+    void setRestaurantNullInvalidTime() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "delete-restaurantId/" + (VOTE_ID + 2)))
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void deleteInvalidDay() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + (VOTE_ID + 1)))
+    void setRestaurantNullInvalidDay() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "delete-restaurantId/" + (VOTE_ID + 1)))
                 .andExpect(status().isUnprocessableEntity());
     }
 }

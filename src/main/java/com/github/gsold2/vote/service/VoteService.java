@@ -25,13 +25,16 @@ public class VoteService {
     }
 
     @Transactional
-    public void update(int userId, int restaurantId, Vote vote) {
+    public void update(int restaurantId, Vote vote) {
         dateTimeValidator.checkDateAndTime(vote);
-        save(userId, restaurantId, vote);
+        vote.setRestaurant(restaurantRepository.getExisted(restaurantId));
+        voteRepository.save(vote);
     }
 
-    public void delete(Vote vote) {
+    @Transactional
+    public void setRestaurantNull(Vote vote) {
         dateTimeValidator.checkDateAndTime(vote);
-        voteRepository.delete(vote);
+        vote.setRestaurant(null);
+        voteRepository.save(vote);
     }
 }

@@ -46,20 +46,22 @@ public class VoteController {
         return ResponseEntity.of(voteRepository.get(authUser.id(), id));
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/delete-restaurantId/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(allEntries = true)
-    public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
-        log.info("delete {} for user {}", id, authUser.id());
-        Vote vote = voteRepository.getExistedAndBelonged(authUser.id(), id);
-        service.delete(vote);
+    public void setRestaurantNull(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
+        int userId = authUser.id();
+        log.info("delete {} for user {}", id, userId);
+        Vote vote = voteRepository.getExistedAndBelonged(userId, id);
+        service.setRestaurantNull(vote);
     }
 
     @GetMapping
     @Cacheable(key = "#authUser.authUser().id")
     public List<VoteTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("getAll for user {}", authUser.id());
-        return VoteUtil.getTos(voteRepository.getAll(authUser.id()));
+        int userId = authUser.id();
+        log.info("getAll for user {}", userId);
+        return VoteUtil.getTos(voteRepository.getAll(userId));
     }
 
     @GetMapping("/filter")
@@ -79,8 +81,7 @@ public class VoteController {
         int userId = authUser.id();
         Vote vote = voteRepository.getExistedAndBelonged(userId, id);
         log.info("update {} for user {}", vote, userId);
-        restaurantRepository.getExisted(restaurantId);
-        service.update(userId, restaurantId, vote);
+        service.update(restaurantId, vote);
     }
 
     @PostMapping

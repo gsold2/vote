@@ -18,11 +18,11 @@ public interface VoteRepository extends BaseRepository<Vote> {
     @Query("SELECT v FROM Vote v WHERE v.user.id = :userId AND v.date >= :startDate AND v.date <= :endDate")
     List<Vote> getBetweenWithInclusion(int userId, LocalDate startDate, LocalDate endDate);
 
-    @Query("SELECT v FROM Vote v JOIN FETCH v.restaurant WHERE v.id = :id AND v.user.id = :userId")
+    @Query("SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant WHERE v.id = :id AND v.user.id = :userId")
     Optional<Vote> get(int userId, int id);
 
     default Vote getExistedAndBelonged(int userId, int id) {
         return get(userId, id).orElseThrow(
-                () -> new DataConflictException("Vote id=" + id + " is not exist or doesn't belong to User id=" + userId));
+                () -> new DataConflictException("Vote id=" + id + " is not existed or doesn't belong to User id=" + userId));
     }
 }
