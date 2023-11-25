@@ -13,7 +13,7 @@ import java.time.LocalTime;
 
 import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.restaurant1;
 import static com.github.gsold2.vote.web.user.UserTestData.ADMIN_MAIL;
-import static com.github.gsold2.vote.web.vote.VoteTestData.VOTE_ID;
+import static com.github.gsold2.vote.web.vote.VoteController.REST_URL;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,7 +35,7 @@ public class VoteControllerAfterTimeTest extends BaseVoteControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalidTime() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 2))
+        perform(MockMvcRequestBuilders.put(REST_URL)
                 .param("restaurantId", String.valueOf(restaurant1.id()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -45,14 +45,7 @@ public class VoteControllerAfterTimeTest extends BaseVoteControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void setRestaurantNullInvalidTime() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "delete-restaurantId/" + (VOTE_ID + 2)))
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void setRestaurantNullInvalidDay() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "delete-restaurantId/" + (VOTE_ID + 1)))
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "delete-restaurantId"))
                 .andExpect(status().isUnprocessableEntity());
     }
 }

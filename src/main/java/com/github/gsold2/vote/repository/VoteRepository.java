@@ -21,8 +21,11 @@ public interface VoteRepository extends BaseRepository<Vote> {
     @Query("SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant WHERE v.id = :id AND v.user.id = :userId")
     Optional<Vote> get(int userId, int id);
 
-    default Vote getExistedAndBelonged(int userId, int id) {
-        return get(userId, id).orElseThrow(
-                () -> new DataConflictException("Vote id=" + id + " is not existed or doesn't belong to User id=" + userId));
+    @Query("SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant WHERE v.user.id = :userId AND v.date = CURRENT_DATE")
+    Optional<Vote> getUpToday(int userId);
+
+    default Vote getExistedUpToday(int userId) {
+        return getUpToday(userId).orElseThrow(
+                () -> new DataConflictException("User id=" + userId + " doesn't vote today"));
     }
 }

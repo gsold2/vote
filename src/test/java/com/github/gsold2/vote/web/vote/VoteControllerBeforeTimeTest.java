@@ -15,6 +15,8 @@ import java.time.LocalTime;
 
 import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.*;
 import static com.github.gsold2.vote.web.user.UserTestData.ADMIN_MAIL;
+import static com.github.gsold2.vote.web.user.UserTestData.USER_MAIL;
+import static com.github.gsold2.vote.web.vote.VoteController.REST_URL;
 import static com.github.gsold2.vote.web.vote.VoteTestData.getUpdated;
 import static com.github.gsold2.vote.web.vote.VoteTestData.*;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -39,7 +41,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateValidTime() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 2))
+        perform(MockMvcRequestBuilders.put(REST_URL)
                 .param("restaurantId", String.valueOf(restaurant1.id()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -52,19 +54,9 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void updateInvalidDate() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 1))
-                .param("restaurantId", String.valueOf(restaurant1.id()))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = USER_MAIL)
     void updateNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + NOT_EXISTED_VOTE_ID)
+        perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("restaurantId", String.valueOf(restaurant1.id())))
                 .andDo(print())
@@ -74,7 +66,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalid() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 2))
+        perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("restaurantId", String.valueOf(NOT_EXISTED_RESTAURANT_ID)))
                 .andDo(print())
@@ -84,7 +76,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void setRestaurantNullValidTime() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "delete-restaurantId/" + (VOTE_ID + 2)))
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "delete-restaurantId"))
                 .andExpect(status().isNoContent());
         assertNull(voteRepository.get(UserTestData.ADMIN_ID, (VOTE_ID + 2)).get().getRestaurant());
     }
@@ -92,10 +84,10 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void setRestaurantNullValidTimeAndThenUpdate() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "delete-restaurantId/" + (VOTE_ID + 2)))
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "delete-restaurantId"))
                 .andExpect(status().isNoContent());
 
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + (VOTE_ID + 2))
+        perform(MockMvcRequestBuilders.put(REST_URL)
                 .param("restaurantId", String.valueOf(restaurant1.id()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
