@@ -1,6 +1,6 @@
 package com.github.gsold2.vote.web.vote;
 
-import com.github.gsold2.vote.util.validation.DateTimeValidator;
+import com.github.gsold2.vote.util.validation.TimeValidator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,16 +20,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class VoteControllerAfterTimeTest extends BaseVoteControllerTest {
 
     @Autowired
-    DateTimeValidator dateTimeValidator;
+    TimeValidator timeValidator;
 
     @BeforeEach
     void beforeEach() {
-        dateTimeValidator.setOffsetTime(LocalTime.now().getHour());
+        timeValidator.setLimitTimeForChange(LocalTime.now().getHour());
     }
 
     @AfterEach
     void afterEach() {
-        dateTimeValidator.setOffsetTime(DateTimeValidator.defaultOffsetTime);
+        timeValidator.setLimitTimeForChange(TimeValidator.defaultLimitTimeForChange);
     }
 
     @Test
