@@ -70,7 +70,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("restaurantId", String.valueOf(NOT_EXISTED_RESTAURANT_ID)))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
