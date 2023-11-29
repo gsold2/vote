@@ -14,7 +14,7 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
     @Query("SELECT r FROM Restaurant r WHERE r.user.id = :userId")
     List<Restaurant> getAll(int userId);
 
-    @Query("SELECT r FROM Restaurant r JOIN FETCH r.menuItems mi WHERE mi.date = CURRENT_DATE AND r.id = mi.dish.restaurant.id")
+    @Query("SELECT r FROM Restaurant r JOIN FETCH r.menuItems mi WHERE mi.dateOfMenu = CURRENT_DATE AND r.id = mi.dish.restaurant.id")
     List<Restaurant> getAllWithMenuUpToday();
 
     @Query("SELECT r FROM Restaurant r WHERE r.id = :id AND r.user.id = :userId")

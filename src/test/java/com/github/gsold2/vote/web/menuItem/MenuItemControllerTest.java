@@ -66,7 +66,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     void getAllByRestaurantAndDate() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "filter")
                 .param("restaurantId", String.valueOf(restaurant1.id()))
-                .param("date", String.valueOf(menuItem1.getDate())))
+                .param("date", String.valueOf(menuItem1.getDateOfMenu())))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

@@ -13,15 +13,15 @@ import java.time.LocalDate;
 
 
 @Entity
-@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(name = "vote_idx", columnNames = {"user_id", "date"})})
+@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(name = "vote_idx", columnNames = {"user_id", "voting_date"})})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Vote extends BaseEntity {
 
-    @Column(name = "date", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
+    @Column(name = "voting_date", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
-    private Date date;
+    private Date votingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
@@ -32,13 +32,13 @@ public class Vote extends BaseEntity {
     @JsonIgnore
     private User user;
 
-    public Vote(Integer id, LocalDate date) {
+    public Vote(Integer id, LocalDate votingDate) {
         super(id);
-        this.date = Date.valueOf(date);
+        this.votingDate = Date.valueOf(votingDate);
     }
 
     @Override
     public String toString() {
-        return "Vote:" + id + '[' + date + ']';
+        return "Vote:" + id + '[' + votingDate + ']';
     }
 }

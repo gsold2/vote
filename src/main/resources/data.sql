@@ -17,13 +17,13 @@ VALUES ('dish_1', 100, 1),
        ('dish_2', 150, 1),
        ('dish_1', 100, 2);
 
-INSERT INTO MENU_ITEM (date, dish_id, restaurant_id)
+INSERT INTO MENU_ITEM (date_of_menu, dish_id, restaurant_id)
 VALUES ('2020-01-29', 1, 1),
        ('2020-01-29', 2, 1),
        ('2020-01-30', 3, 2),
-       (now(), 1, 1);
+       (CURRENT_DATE, 1, 1);
 
-INSERT INTO VOTE (user_id, restaurant_id, date)
+INSERT INTO VOTE (user_id, restaurant_id, voting_date)
 VALUES (1, 1, '2020-01-30'),
        (2, 1, '2020-01-30'),
        (2, 1, CURRENT_DATE);

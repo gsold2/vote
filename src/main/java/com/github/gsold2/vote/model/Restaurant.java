@@ -22,7 +22,7 @@ public class Restaurant extends NamedEntity {
     private User user;
 
     @OneToMany(fetch = FetchType.LAZY)//, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @OrderBy("date DESC")
+    @OrderBy("dateOfMenu DESC")
     @JoinColumn(name = "restaurant_id")
     @JsonIgnore
     private List<MenuItem> menuItems;

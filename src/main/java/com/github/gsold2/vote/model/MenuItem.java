@@ -12,15 +12,15 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "menu_item", uniqueConstraints = {@UniqueConstraint(name = "menu_idx", columnNames = {"dish_id", "date"})})
+@Table(name = "menu_item", uniqueConstraints = {@UniqueConstraint(name = "menu_idx", columnNames = {"dish_id", "date_of_menu"})})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MenuItem extends BaseEntity {
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "date_of_menu", nullable = false)
     @NotNull
-    private Date date;
+    private Date dateOfMenu;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dish_id")
@@ -31,9 +31,9 @@ public class MenuItem extends BaseEntity {
     @JsonIgnore
     private Integer restaurantId;
 
-    public MenuItem(Integer id, LocalDate date) {
+    public MenuItem(Integer id, LocalDate dateOfMenu) {
         super(id);
-        this.date = Date.valueOf(date);
+        this.dateOfMenu = Date.valueOf(dateOfMenu);
     }
 
     @Override
