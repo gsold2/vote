@@ -12,10 +12,10 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface MenuItemRepository extends BaseRepository<MenuItem> {
 
-    @Query("SELECT m FROM MenuItem m JOIN FETCH m.dish JOIN FETCH m.dish.restaurant WHERE m.dateOfMenu = :date AND m.dish.restaurant.id=:restaurantId")
+    @Query("SELECT m FROM MenuItem m WHERE m.dateOfMenu = :date AND m.dish.restaurant.id = :restaurantId")
     List<MenuItem> getAllByRestaurantAndDate(int restaurantId, LocalDate date);
 
-    @Query("SELECT m FROM MenuItem m JOIN FETCH m.dish JOIN FETCH m.dish.restaurant WHERE m.id = :id")
+    @Query("SELECT m FROM MenuItem m WHERE m.id = :id")
     Optional<MenuItem> get(int id);
 
     default MenuItem getIfExisted(int id) {

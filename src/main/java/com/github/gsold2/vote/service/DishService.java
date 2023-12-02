@@ -13,10 +13,17 @@ public class DishService {
     private final DishRepository dishRepository;
     private final RestaurantRepository restaurantRepository;
 
+    @Transactional
+    public Dish create(int restaurantId, Dish dish) {
+        dish.setRestaurant(restaurantRepository.getIfExisted(restaurantId));
+        return dishRepository.save(dish);
+    }
 
     @Transactional
-    public Dish save(int restaurantId, Dish dish) {
-        dish.setRestaurant(restaurantRepository.getExisted(restaurantId));
-        return dishRepository.save(dish);
+    public void update(int id, Dish dish) {
+        Dish existed = dishRepository.getExisted(id);
+        existed.setPrice(dish.getPrice());
+        existed.setName(dish.getName());
+        dishRepository.save(existed);
     }
 }

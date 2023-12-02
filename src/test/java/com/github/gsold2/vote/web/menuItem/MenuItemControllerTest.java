@@ -109,7 +109,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
                 .param("dishId", String.valueOf(dish2.id()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isConflict());
+                .andExpect(status().isNotFound());
     }
 
     @Test

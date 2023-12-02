@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.github.gsold2.vote.web.dish.DishController.REST_URL;
 import static com.github.gsold2.vote.web.dish.DishTestData.*;
+import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.NOT_EXISTED_RESTAURANT_ID;
 import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.restaurant1;
 import static com.github.gsold2.vote.web.user.UserTestData.ADMIN_MAIL;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -104,6 +105,18 @@ public class DishControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void createNotFound() throws Exception {
+        Dish newDish = getNew();
+        perform(MockMvcRequestBuilders.post(DishController.REST_URL)
+                .param("restaurantId", String.valueOf(NOT_EXISTED_RESTAURANT_ID))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newDish)))
+                .andDo(print())
+                .andExpect(status().isConflict());
     }
 
     @Test

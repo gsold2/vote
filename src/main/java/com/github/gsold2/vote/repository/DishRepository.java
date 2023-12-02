@@ -11,10 +11,10 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface DishRepository extends BaseRepository<Dish> {
 
-    @Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restaurantId")
+    @Query("SELECT d FROM Dish d WHERE d.restaurant.id = :restaurantId")
     List<Dish> getAllByRestaurant(int restaurantId);
 
-    @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.id = :id")
+    @Query("SELECT d FROM Dish d WHERE d.id = :id")
     Optional<Dish> get(int id);
 
     default Dish getIfExisted(int id) {

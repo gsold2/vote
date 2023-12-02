@@ -24,4 +24,9 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
         return get(id).orElseThrow(
                 () -> new DataConflictException("Restaurant id=" + id + " is not existed"));
     }
+
+    default void checkExistence(int id) {
+        get(id).orElseThrow(
+                () -> new DataConflictException("Restaurant id=" + id + " is not existed"));
+    }
 }
