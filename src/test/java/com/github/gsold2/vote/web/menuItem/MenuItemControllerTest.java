@@ -22,7 +22,6 @@ import static com.github.gsold2.vote.web.menuItem.MenuItemTestData.getUpdated;
 import static com.github.gsold2.vote.web.menuItem.MenuItemTestData.*;
 import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.restaurant1;
 import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.restaurant2;
-import static com.github.gsold2.vote.web.user.UserTestData.ADMIN_ID;
 import static com.github.gsold2.vote.web.user.UserTestData.ADMIN_MAIL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -78,7 +77,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + MENU_ITEM_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(menuItemRepository.get(ADMIN_ID, MENU_ITEM_ID).isPresent());
+        assertFalse(menuItemRepository.get(MENU_ITEM_ID).isPresent());
     }
 
     @Test

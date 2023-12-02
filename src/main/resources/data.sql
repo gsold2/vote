@@ -8,9 +8,9 @@ VALUES ('USER', 1),
        ('ADMIN', 2),
        ('USER', 2);
 
-INSERT INTO RESTAURANT (user_id, name)
-VALUES (2, 'restaurant_1'),
-       (2, 'restaurant_2');
+INSERT INTO RESTAURANT (name)
+VALUES ('restaurant_1'),
+       ('restaurant_2');
 
 INSERT INTO DISH (name, price, restaurant_id)
 VALUES ('dish_1', 100, 1),

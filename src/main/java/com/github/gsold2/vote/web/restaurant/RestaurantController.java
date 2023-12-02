@@ -36,14 +36,14 @@ public class RestaurantController {
     @GetMapping(REST_URL + "/{id}")
     public ResponseEntity<Restaurant> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("get restaurant {} for user {}", id, authUser.id());
-        return ResponseEntity.of(repository.get(authUser.id(), id));
+        return ResponseEntity.of(repository.get(id));
     }
 
     @GetMapping(REST_URL)
     @Cacheable(key = "#authUser.authUser().id")
     public List<RestaurantTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get all restaurants for user {}", authUser.id());
-        return RestaurantsUtil.getTos(repository.getAll(authUser.id()));
+        return RestaurantsUtil.getTos(repository.getAll());
     }
 
     @GetMapping(value = {"/api/user/restaurants/with-menu-up-today", "/api/admin/restaurants/with-menu-up-today"})
@@ -57,10 +57,10 @@ public class RestaurantController {
     @CacheEvict(allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam String name, @PathVariable int id) {
         int userId = authUser.id();
-        Restaurant restaurant = repository.getExistedAndBelonged(userId, id);
+        Restaurant restaurant = repository.getExisted(id);
         log.info("update {} for user {}", restaurant, userId);
         restaurant.setName(name);
-        service.save(userId, restaurant);
+        service.save(restaurant);
     }
 
     @PostMapping(REST_URL)
@@ -69,7 +69,7 @@ public class RestaurantController {
         int userId = authUser.id();
         Restaurant restaurant = new Restaurant(null, name);
         log.info("create {} for user {}", restaurant, userId);
-        Restaurant created = service.save(userId, restaurant);
+        Restaurant created = service.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();

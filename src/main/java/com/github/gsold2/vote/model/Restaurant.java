@@ -10,16 +10,11 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "restaurant", uniqueConstraints = {@UniqueConstraint(name = "restaurant_idx", columnNames = {"user_id", "name"})})
+@Table(name = "restaurant", uniqueConstraints = {@UniqueConstraint(name = "restaurant_idx", columnNames = {"name"})})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Restaurant extends NamedEntity {
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
-    private User user;
 
     @OneToMany(fetch = FetchType.LAZY)//, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("dateOfMenu DESC")

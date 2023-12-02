@@ -41,7 +41,7 @@ public class MenuItemController {
     @GetMapping("/{id}")
     public ResponseEntity<MenuItem> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("get menu item {} for user {}", id, authUser.id());
-        return ResponseEntity.of(menuItemRepository.get(authUser.id(), id));
+        return ResponseEntity.of(menuItemRepository.get(id));
     }
 
     @DeleteMapping("/{id}")
@@ -49,7 +49,7 @@ public class MenuItemController {
     @CacheEvict(allEntries = true)
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("delete {} for user {}", id, authUser.id());
-        MenuItem menuItem = menuItemRepository.getExistedAndBelonged(authUser.id(), id);
+        MenuItem menuItem = menuItemRepository.getIfExisted(id);
         menuItemRepository.delete(menuItem);
     }
 
@@ -59,7 +59,7 @@ public class MenuItemController {
                                                     @RequestParam int restaurantId,
                                                     @RequestParam LocalDate date) {
         log.info("get all menu items for the user {} and restaurant{} on date {}", authUser.id(), restaurantId, date);
-        return menuItemRepository.getAllByRestaurantAndDate(authUser.id(), restaurantId, date);
+        return menuItemRepository.getAllByRestaurantAndDate(restaurantId, date);
     }
 
     @PutMapping(value = "/{id}")
@@ -67,10 +67,10 @@ public class MenuItemController {
     @CacheEvict(allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam int dishId, @PathVariable int id) {
         int userId = authUser.id();
-        MenuItem menuItem = menuItemRepository.getExistedAndBelonged(userId, id);
+        MenuItem menuItem = menuItemRepository.getIfExisted(id);
         log.info("update {} for user {}", menuItem, userId);
         Restaurant restaurant = menuItem.getDish().getRestaurant();
-        int restaurantIdFromDish = dishRepository.getExistedAndBelonged(userId, dishId).getRestaurant().id();
+        int restaurantIdFromDish = dishRepository.getIfExisted(dishId).getRestaurant().id();
         assureIdConsistent(restaurant, restaurantIdFromDish);
         service.save(dishId, menuItem);
     }
@@ -83,7 +83,7 @@ public class MenuItemController {
         int userId = authUser.id();
         MenuItem menuItem = new MenuItem(null, date);
         log.info("create {} for dish {} by user {}", menuItem, dishId, userId);
-        dishRepository.getExistedAndBelonged(userId, dishId);
+        dishRepository.getIfExisted(dishId);
         MenuItem created = service.save(dishId, menuItem);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
@@ -96,10 +96,9 @@ public class MenuItemController {
     public ResponseEntity<List<MenuItem>> multipleCreationWithLocationUpToday(@AuthenticationPrincipal AuthUser authUser,
                                                                               @RequestParam Integer restaurantId,
                                                                               @RequestParam LocalDate date) {
-        int userId = authUser.id();
-        log.info("clone menu items for {} and user {} with date {}", restaurantId, userId, date);
-        restaurantRepository.getExistedAndBelonged(userId, restaurantId);
-        List<MenuItem> created = service.copyUpToday(userId, restaurantId, date);
+        log.info("clone menu items for {} with date {}", restaurantId, date);
+        restaurantRepository.getIfExisted(restaurantId);
+        List<MenuItem> created = service.copyUpToday(restaurantId, date);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/filter?restaurantId={restaurantId}&date={date}")
                 .buildAndExpand(restaurantId, LocalDate.now()).toUri();

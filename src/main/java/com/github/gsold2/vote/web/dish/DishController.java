@@ -41,14 +41,14 @@ public class DishController {
     @GetMapping("/{id}")
     public ResponseEntity<Dish> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("get dish {} for user {}", id, authUser.id());
-        return ResponseEntity.of(dishRepository.get(authUser.id(), id));
+        return ResponseEntity.of(dishRepository.get(id));
     }
 
     @GetMapping
     @Cacheable(key = "#restaurantId")
     public List<DishTo> getAllByRestaurant(@AuthenticationPrincipal AuthUser authUser, @RequestParam int restaurantId) {
         log.info("get all dishes for restaurant {} and user {}", restaurantId, authUser.id());
-        return DishUtil.getTos(dishRepository.getAllByRestaurant(authUser.id(), restaurantId));
+        return DishUtil.getTos(dishRepository.getAllByRestaurant(restaurantId));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +58,7 @@ public class DishController {
         int userId = authUser.id();
         log.info("update {} for user {}", dish, userId);
         assureIdConsistent(dish, id);
-        int restaurantId = dishRepository.getExistedAndBelonged(userId, id).getRestaurant().id();
+        int restaurantId = dishRepository.getIfExisted(id).getRestaurant().id();
         service.save(restaurantId, dish);
     }
 
@@ -70,7 +70,7 @@ public class DishController {
         int userId = authUser.id();
         log.info("create {} for restaurant {} and user {}", dish, restaurantId, userId);
         checkNew(dish);
-        restaurantRepository.getExistedAndBelonged(userId, restaurantId);
+        restaurantRepository.getExisted(restaurantId);
         Dish created = service.save(restaurantId, dish);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
