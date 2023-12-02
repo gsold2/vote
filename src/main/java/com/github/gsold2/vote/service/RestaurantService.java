@@ -12,7 +12,14 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
 
     @Transactional
-    public Restaurant save(Restaurant restaurant) {
+    public Restaurant create(Restaurant restaurant) {
         return restaurantRepository.save(restaurant);
+    }
+
+    @Transactional
+    public void update(int id, String name) {
+        Restaurant restaurant = restaurantRepository.getExisted(id);
+        restaurant.setName(name);
+        restaurantRepository.save(restaurant);
     }
 }
