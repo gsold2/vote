@@ -21,7 +21,7 @@ public interface VoteRepository extends BaseRepository<Vote> {
     @Query("SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant WHERE v.id = :id AND v.user.id = :userId")
     Optional<Vote> get(int userId, int id);
 
-    @Query("SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant WHERE v.user.id = :userId AND v.votingDate = CURRENT_DATE")
+    @Query("SELECT v FROM Vote v WHERE v.user.id = :userId AND v.votingDate = CURRENT_DATE")
     Optional<Vote> getUpToday(int userId);
 
     default Vote getExistedUpToday(int userId) {
