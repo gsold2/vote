@@ -8,9 +8,6 @@ import com.github.gsold2.vote.util.VoteUtil;
 import com.github.gsold2.vote.web.AuthUser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,7 +28,6 @@ import static com.github.gsold2.vote.util.DateUtil.atStartDayOrMin;
 @RequestMapping(value = VoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
-@CacheConfig(cacheNames = "votes")
 public class VoteController {
     static final String REST_URL = "/api/user/votes";
 
@@ -46,7 +42,6 @@ public class VoteController {
 
     @PutMapping("/delete-restaurantId")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(allEntries = true)
     public void setRestaurantNull(@AuthenticationPrincipal AuthUser authUser) {
         int userId = authUser.id();
         log.info("delete restaurantId by user {}", userId);
@@ -54,7 +49,6 @@ public class VoteController {
     }
 
     @GetMapping
-    @Cacheable(key = "#authUser.authUser().id")
     public List<VoteTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
         int userId = authUser.id();
         log.info("getAll for user {}", userId);
@@ -73,7 +67,6 @@ public class VoteController {
 
     @PutMapping()
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam int restaurantId) {
         int userId = authUser.id();
         log.info("update the vote by user {}", userId);
@@ -81,7 +74,6 @@ public class VoteController {
     }
 
     @PostMapping
-    @CacheEvict(allEntries = true)
     public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser,
                                                    @RequestParam int restaurantId) {
         log.info("create for restaurant {} by user {}", restaurantId, authUser.id());

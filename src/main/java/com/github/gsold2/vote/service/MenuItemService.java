@@ -7,6 +7,7 @@ import com.github.gsold2.vote.repository.DishRepository;
 import com.github.gsold2.vote.repository.MenuItemRepository;
 import com.github.gsold2.vote.repository.RestaurantRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ public class MenuItemService {
     private final RestaurantRepository restaurantRepository;
 
     @Transactional
+    @CacheEvict(value = "restaurants", allEntries = true)
     public void update(int dishId, int id) {
         Dish dish = dishRepository.getOrThrowDataConflictException(dishId);
         MenuItem menuItem = menuItemRepository.getOrThrowNotFoundException(id);
@@ -34,6 +36,7 @@ public class MenuItemService {
     }
 
     @Transactional
+    @CacheEvict(value = "restaurants", allEntries = true)
     public MenuItem create(int dishId, MenuItem menuItem) {
         Dish existed = dishRepository.getOrThrowDataConflictException(dishId);
         menuItem.setDish(existed);
@@ -42,6 +45,7 @@ public class MenuItemService {
     }
 
     @Transactional
+    @CacheEvict(value = "restaurants", allEntries = true)
     public List<MenuItem> copyUpToday(Integer restaurantId, LocalDate date) {
         restaurantRepository.getOrThrowDataConflictException(restaurantId);
         if (menuItemRepository.getAllByRestaurantAndDate(restaurantId, LocalDate.now()).size() > 0) {
