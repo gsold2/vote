@@ -32,7 +32,7 @@ public class MenuItemController {
     @GetMapping("/{id}")
     public ResponseEntity<MenuItem> get(@PathVariable int id) {
         log.info("get menu item {}", id);
-        return ResponseEntity.of(menuItemRepository.get(id));
+        return ResponseEntity.of(menuItemRepository.findById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -40,7 +40,7 @@ public class MenuItemController {
     @CacheEvict(allEntries = true)
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
-        menuItemRepository.delete(menuItemRepository.getIfExisted(id));
+        menuItemRepository.deleteExisted(id);
     }
 
     @GetMapping("/filter")

@@ -33,7 +33,7 @@ public class RestaurantController {
     @GetMapping(REST_URL + "/{id}")
     public ResponseEntity<Restaurant> get(@PathVariable int id) {
         log.info("get restaurant {}", id);
-        return ResponseEntity.of(repository.get(id));
+        return ResponseEntity.of(repository.findById(id));
     }
 
     @GetMapping(REST_URL)

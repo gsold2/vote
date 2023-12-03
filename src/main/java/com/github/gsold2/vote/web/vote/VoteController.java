@@ -37,7 +37,6 @@ public class VoteController {
     static final String REST_URL = "/api/user/votes";
 
     private final VoteRepository voteRepository;
-    private final RestaurantRepository restaurantRepository;
     private final VoteService service;
 
     @GetMapping("/{id}")
@@ -88,11 +87,9 @@ public class VoteController {
     @CacheEvict(allEntries = true)
     public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser,
                                                    @RequestParam int restaurantId) {
-        int userId = authUser.id();
-        log.info("create for restaurant {} by user {}", restaurantId, userId);
-        restaurantRepository.getExisted(restaurantId);
+        log.info("create for restaurant {} by user {}", restaurantId, authUser.id());
         Vote vote = new Vote(null, LocalDate.now());
-        Vote created = service.save(userId, restaurantId, vote);
+        Vote created = service.save(authUser.getUser(), restaurantId, vote);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();

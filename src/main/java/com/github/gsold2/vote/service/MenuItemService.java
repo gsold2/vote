@@ -24,8 +24,8 @@ public class MenuItemService {
 
     @Transactional
     public void update(int dishId, int id) {
-        Dish dish = dishRepository.getIfExisted(dishId);
-        MenuItem menuItem = menuItemRepository.getExisted(id);
+        Dish dish = dishRepository.getOrThrowDataConflictException(dishId);
+        MenuItem menuItem = menuItemRepository.getOrThrowNotFoundException(id);
         if (!Objects.equals(menuItem.getRestaurantId(), dish.getRestaurant().getId())) {
             throw new IllegalRequestDataException("Dish id=" + dishId + " doesn't have restaurantId=" + menuItem.getRestaurantId());
         }
@@ -35,7 +35,7 @@ public class MenuItemService {
 
     @Transactional
     public MenuItem create(int dishId, MenuItem menuItem) {
-        Dish existed = dishRepository.getIfExisted(dishId);
+        Dish existed = dishRepository.getOrThrowDataConflictException(dishId);
         menuItem.setDish(existed);
         menuItem.setRestaurantId(existed.getRestaurant().getId());
         return menuItemRepository.save(menuItem);
@@ -43,7 +43,7 @@ public class MenuItemService {
 
     @Transactional
     public List<MenuItem> copyUpToday(Integer restaurantId, LocalDate date) {
-        restaurantRepository.checkExistence(restaurantId);
+        restaurantRepository.getOrThrowDataConflictException(restaurantId);
         if (menuItemRepository.getAllByRestaurantAndDate(restaurantId, LocalDate.now()).size() > 0) {
             throw new IllegalRequestDataException("Restaurant id=" + restaurantId + " already has menuItems up today. This method is not applicable.");
         }

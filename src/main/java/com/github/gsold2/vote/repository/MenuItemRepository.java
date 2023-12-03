@@ -14,12 +14,4 @@ public interface MenuItemRepository extends BaseRepository<MenuItem> {
 
     @Query("SELECT m FROM MenuItem m WHERE m.dateOfMenu = :date AND m.dish.restaurant.id = :restaurantId")
     List<MenuItem> getAllByRestaurantAndDate(int restaurantId, LocalDate date);
-
-    @Query("SELECT m FROM MenuItem m WHERE m.id = :id")
-    Optional<MenuItem> get(int id);
-
-    default MenuItem getIfExisted(int id) {
-        return get(id).orElseThrow(
-                () -> new DataConflictException("MenuItem id=" + id + " is not existed"));
-    }
 }

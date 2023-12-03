@@ -25,6 +25,6 @@ public abstract class AbstractUserController {
 
     public User get(int id) {
         log.info("get {}", id);
-        return repository.getExisted(id);
+        return repository.getOrThrowNotFoundException(id);
     }
 }

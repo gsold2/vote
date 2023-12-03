@@ -18,7 +18,7 @@ public class RestaurantService {
 
     @Transactional
     public void update(int id, String name) {
-        Restaurant restaurant = restaurantRepository.getExisted(id);
+        Restaurant restaurant = restaurantRepository.getOrThrowNotFoundException(id);
         restaurant.setName(name);
         restaurantRepository.save(restaurant);
     }

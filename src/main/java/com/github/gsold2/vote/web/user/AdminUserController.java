@@ -72,7 +72,7 @@ public class AdminUserController extends AbstractUserController {
     @CacheEvict(allEntries = true)
     public void enable(@PathVariable int id, @RequestParam boolean enabled) {
         log.info(enabled ? "enable {}" : "disable {}", id);
-        User user = repository.getExisted(id);
+        User user = repository.getOrThrowNotFoundException(id);
         user.setEnabled(enabled);
     }
 }

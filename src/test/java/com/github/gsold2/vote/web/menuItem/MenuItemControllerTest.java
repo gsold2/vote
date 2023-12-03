@@ -77,14 +77,14 @@ public class MenuItemControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + MENU_ITEM_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(menuItemRepository.get(MENU_ITEM_ID).isPresent());
+        assertFalse(menuItemRepository.findById(MENU_ITEM_ID).isPresent());
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void deleteNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_EXISTED_MENU_ITEM_ID))
-                .andExpect(status().isConflict());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        MenuItem existed = menuItemRepository.getExisted(MENU_ITEM_ID + 3);
+        MenuItem existed = menuItemRepository.getOrThrowNotFoundException(MENU_ITEM_ID + 3);
         MENU_ITEM_MATCHER.assertMatch(existed, updated);
         DISH_MATCHER.assertMatch(existed.getDish(), dish2);
     }
@@ -156,7 +156,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newMenuItem.setId(newId);
         MENU_ITEM_MATCHER.assertMatch(created, newMenuItem);
-        MENU_ITEM_MATCHER.assertMatch(menuItemRepository.getExisted(newId), newMenuItem);
+        MENU_ITEM_MATCHER.assertMatch(menuItemRepository.getOrThrowNotFoundException(newId), newMenuItem);
     }
 
     @Test
@@ -207,7 +207,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
         int newId = created.get(0).id();
         newMenuItem.setId(newId);
         MENU_ITEM_MATCHER.assertMatch(created, List.of(newMenuItem));
-        MENU_ITEM_MATCHER.assertMatch(menuItemRepository.getExisted(newId), newMenuItem);
+        MENU_ITEM_MATCHER.assertMatch(menuItemRepository.getOrThrowNotFoundException(newId), newMenuItem);
     }
 
     @Test

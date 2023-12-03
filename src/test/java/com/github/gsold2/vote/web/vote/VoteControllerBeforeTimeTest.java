@@ -47,7 +47,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        Vote existed = voteRepository.getExisted(VOTE_ID + 2);
+        Vote existed = voteRepository.getOrThrowNotFoundException(VOTE_ID + 2);
         Vote updated = getUpdated();
         VOTE_MATCHER.assertMatch(existed, updated);
         RESTAURANT_MATCHER.assertMatch(existed.getRestaurant(), restaurant1);
@@ -93,7 +93,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        Vote existed = voteRepository.getExisted(VOTE_ID + 2);
+        Vote existed = voteRepository.getOrThrowNotFoundException(VOTE_ID + 2);
         Vote updated = getUpdated();
         VOTE_MATCHER.assertMatch(existed, updated);
         RESTAURANT_MATCHER.assertMatch(existed.getRestaurant(), restaurant1);

@@ -91,7 +91,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        USER_MATCHER.assertMatch(repository.getExisted(USER_ID), getUpdated());
+        USER_MATCHER.assertMatch(repository.getOrThrowNotFoundException(USER_ID), getUpdated());
     }
 
     @Test
@@ -107,7 +107,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
-        USER_MATCHER.assertMatch(repository.getExisted(newId), newUser);
+        USER_MATCHER.assertMatch(repository.getOrThrowNotFoundException(newId), newUser);
     }
 
     @Test
@@ -128,7 +128,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        assertFalse(repository.getExisted(USER_ID).isEnabled());
+        assertFalse(repository.getOrThrowNotFoundException(USER_ID).isEnabled());
     }
 
     @Test

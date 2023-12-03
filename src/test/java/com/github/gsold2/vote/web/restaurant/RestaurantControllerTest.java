@@ -65,7 +65,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        RESTAURANT_MATCHER.assertMatch(restaurantRepository.getExisted(RESTAURANT_ID), updated);
+        RESTAURANT_MATCHER.assertMatch(restaurantRepository.getOrThrowNotFoundException(RESTAURANT_ID), updated);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newRestaurant.setId(newId);
         RESTAURANT_MATCHER.assertMatch(created, newRestaurant);
-        RESTAURANT_MATCHER.assertMatch(restaurantRepository.getExisted(newId), newRestaurant);
+        RESTAURANT_MATCHER.assertMatch(restaurantRepository.getOrThrowNotFoundException(newId), newRestaurant);
     }
 
     @Test

@@ -37,7 +37,7 @@ public class DishController {
     @GetMapping("/{id}")
     public ResponseEntity<Dish> get(@PathVariable int id) {
         log.info("get dish {}", id);
-        return ResponseEntity.of(dishRepository.get(id));
+        return ResponseEntity.of(dishRepository.findById(id));
     }
 
     @GetMapping

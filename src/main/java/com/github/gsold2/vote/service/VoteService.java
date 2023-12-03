@@ -1,7 +1,6 @@
 package com.github.gsold2.vote.service;
 
-import com.github.gsold2.vote.error.IllegalRequestDataException;
-import com.github.gsold2.vote.model.Restaurant;
+import com.github.gsold2.vote.model.User;
 import com.github.gsold2.vote.model.Vote;
 import com.github.gsold2.vote.repository.RestaurantRepository;
 import com.github.gsold2.vote.repository.UserRepository;
@@ -20,16 +19,16 @@ public class VoteService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Vote save(int userId, int restaurantId, Vote vote) {
-        vote.setUser(userRepository.getExisted(userId));
-        vote.setRestaurant(getById(restaurantId));
+    public Vote save(User user, int restaurantId, Vote vote) {
+        vote.setUser(user);
+        vote.setRestaurant(restaurantRepository.getOrThrowIllegalRequestDataException(restaurantId));
         return voteRepository.save(vote);
     }
 
     @Transactional
     public void update(int restaurantId, Vote vote) {
         timeValidator.checkTime(vote);
-        vote.setRestaurant(getById(restaurantId));
+        vote.setRestaurant(restaurantRepository.getOrThrowIllegalRequestDataException(restaurantId));
         voteRepository.save(vote);
     }
 
@@ -38,10 +37,5 @@ public class VoteService {
         timeValidator.checkTime(vote);
         vote.setRestaurant(null);
         voteRepository.save(vote);
-    }
-
-    private Restaurant getById(int restaurantId) {
-        return restaurantRepository.findById(restaurantId).orElseThrow(() ->
-                new IllegalRequestDataException("Restaurant with id=" + restaurantId + " doesn't exist"));
     }
 }

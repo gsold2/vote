@@ -54,7 +54,7 @@ class ProfileControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
-        USER_MATCHER.assertMatch(repository.getExisted(newId), newUser);
+        USER_MATCHER.assertMatch(repository.getOrThrowNotFoundException(newId), newUser);
     }
 
     @Test
@@ -66,7 +66,7 @@ class ProfileControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        USER_MATCHER.assertMatch(repository.getExisted(USER_ID), UsersUtil.updateFromTo(new User(user), updatedTo));
+        USER_MATCHER.assertMatch(repository.getOrThrowNotFoundException(USER_ID), UsersUtil.updateFromTo(new User(user), updatedTo));
     }
 
     @Test

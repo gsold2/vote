@@ -65,7 +65,7 @@ public class DishControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        DISH_MATCHER.assertMatch(dishRepository.getExisted(DISH_ID), updated);
+        DISH_MATCHER.assertMatch(dishRepository.getOrThrowNotFoundException(DISH_ID), updated);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class DishControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newDish.setId(newId);
         DISH_MATCHER.assertMatch(created, newDish);
-        DISH_MATCHER.assertMatch(dishRepository.getExisted(newId), newDish);
+        DISH_MATCHER.assertMatch(dishRepository.getOrThrowNotFoundException(newId), newDish);
     }
 
     @Test

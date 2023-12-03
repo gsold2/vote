@@ -89,7 +89,7 @@ public class VoteControllerTest extends BaseVoteControllerTest {
         int newId = created.id();
         newVote.setId(newId);
         VOTE_MATCHER.assertMatch(created, newVote);
-        VOTE_MATCHER.assertMatch(voteRepository.getExisted(newId), newVote);
+        VOTE_MATCHER.assertMatch(voteRepository.getOrThrowNotFoundException(newId), newVote);
     }
 
     @Test
