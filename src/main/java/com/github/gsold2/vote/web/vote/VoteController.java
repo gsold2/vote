@@ -1,7 +1,6 @@
 package com.github.gsold2.vote.web.vote;
 
 import com.github.gsold2.vote.model.Vote;
-import com.github.gsold2.vote.repository.RestaurantRepository;
 import com.github.gsold2.vote.repository.VoteRepository;
 import com.github.gsold2.vote.service.VoteService;
 import com.github.gsold2.vote.to.VoteTo;
@@ -51,8 +50,7 @@ public class VoteController {
     public void setRestaurantNull(@AuthenticationPrincipal AuthUser authUser) {
         int userId = authUser.id();
         log.info("delete restaurantId by user {}", userId);
-        Vote vote = voteRepository.getExistedUpToday(userId);
-        service.setRestaurantNull(vote);
+        service.setRestaurantNull(userId);
     }
 
     @GetMapping
@@ -78,9 +76,8 @@ public class VoteController {
     @CacheEvict(allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @RequestParam int restaurantId) {
         int userId = authUser.id();
-        Vote vote = voteRepository.getExistedUpToday(userId);
-        log.info("update {} for user {}", vote, userId);
-        service.update(restaurantId, vote);
+        log.info("update the vote by user {}", userId);
+        service.update(restaurantId, userId);
     }
 
     @PostMapping

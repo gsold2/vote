@@ -42,7 +42,7 @@ public interface BaseRepository<T> extends JpaRepository<T, Integer> {
         return getOrThrowAppException(id, new DataConflictException("Entity with id=" + id + " doesn't found"));
     }
 
-    private T getOrThrowAppException(int id, AppException appException) {
+    default T getOrThrowAppException(int id, AppException appException) {
         return findById(id).orElseThrow(() -> appException);
     }
 }

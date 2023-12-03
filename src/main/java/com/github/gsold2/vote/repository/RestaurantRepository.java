@@ -20,6 +20,6 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
      * Return a restaurant or throw the exception with code 422. This is set in RestExceptionHandler.class.
      */
     default Restaurant getOrThrowIllegalRequestDataException(int id) {
-        return findById(id).orElseThrow(() -> new IllegalRequestDataException("Restaurant with id=" + id + " doesn't found"));
+        return getOrThrowAppException(id, new IllegalRequestDataException("Restaurant with id=" + id + " doesn't found"));
     }
 }
