@@ -36,8 +36,9 @@ public class VoteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Vote> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
-        log.info("get restaurant {} for user {}", id, authUser.id());
-        return ResponseEntity.of(voteRepository.get(authUser.id(), id));
+        int userId = authUser.id();
+        log.info("get restaurant {} for user {}", id, userId);
+        return ResponseEntity.of(voteRepository.get(userId, id));
     }
 
     @PutMapping("/delete-restaurantId")
