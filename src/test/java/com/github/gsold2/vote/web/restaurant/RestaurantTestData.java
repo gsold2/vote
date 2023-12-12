@@ -7,7 +7,8 @@ import com.github.gsold2.vote.web.MatcherFactory;
 import java.util.List;
 
 public class RestaurantTestData {
-    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingEqualsComparator(Restaurant.class);
+    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "menuItems");
+    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_ID_MATCHER = MatcherFactory.usingEqualsComparator(Restaurant.class);
     public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_MATCHER = MatcherFactory.usingEqualsComparator(RestaurantTo.class);
 
     public static final int RESTAURANT_ID = 1;

@@ -21,7 +21,7 @@ public class Vote extends BaseEntity {
 
     @Column(name = "voting_date", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
-    private Date votingDate;
+    private LocalDate votingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
@@ -34,7 +34,7 @@ public class Vote extends BaseEntity {
 
     public Vote(Integer id, LocalDate votingDate) {
         super(id);
-        this.votingDate = Date.valueOf(votingDate);
+        this.votingDate = votingDate;
     }
 
     @Override

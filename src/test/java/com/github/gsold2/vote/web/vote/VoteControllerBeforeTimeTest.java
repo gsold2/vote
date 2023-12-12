@@ -50,7 +50,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
         Vote existed = voteRepository.getOrThrowNotFoundException(VOTE_ID + 2);
         Vote updated = getUpdated();
         VOTE_MATCHER.assertMatch(existed, updated);
-        RESTAURANT_MATCHER.assertMatch(existed.getRestaurant(), restaurant1);
+        RESTAURANT_ID_MATCHER.assertMatch(existed.getRestaurant(), restaurant1);
     }
 
     @Test
@@ -96,6 +96,6 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
         Vote existed = voteRepository.getOrThrowNotFoundException(VOTE_ID + 2);
         Vote updated = getUpdated();
         VOTE_MATCHER.assertMatch(existed, updated);
-        RESTAURANT_MATCHER.assertMatch(existed.getRestaurant(), restaurant1);
+        RESTAURANT_ID_MATCHER.assertMatch(existed.getRestaurant(), restaurant1);
     }
 }

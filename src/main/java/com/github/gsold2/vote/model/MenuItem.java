@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 @Entity
@@ -20,7 +19,7 @@ public class MenuItem extends BaseEntity {
 
     @Column(name = "date_of_menu", nullable = false)
     @NotNull
-    private Date dateOfMenu;
+    private LocalDate dateOfMenu;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dish_id")
@@ -33,7 +32,7 @@ public class MenuItem extends BaseEntity {
 
     public MenuItem(Integer id, LocalDate dateOfMenu) {
         super(id);
-        this.dateOfMenu = Date.valueOf(dateOfMenu);
+        this.dateOfMenu = dateOfMenu;
     }
 
     @Override

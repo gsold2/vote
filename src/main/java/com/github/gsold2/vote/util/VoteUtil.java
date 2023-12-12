@@ -14,6 +14,6 @@ public class VoteUtil {
     }
 
     public static VoteTo createTo(Vote vote) {
-        return new VoteTo(vote.getId(), vote.getVotingDate().toLocalDate());
+        return new VoteTo(vote.getId(), vote.getVotingDate());
     }
 }

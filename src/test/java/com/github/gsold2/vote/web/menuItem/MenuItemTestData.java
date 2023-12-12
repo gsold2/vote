@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class MenuItemTestData {
-    public static final MatcherFactory.Matcher<MenuItem> MENU_ITEM_MATCHER = MatcherFactory.usingEqualsComparator(MenuItem.class);
+    public static final MatcherFactory.Matcher<MenuItem> MENU_ITEM_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(MenuItem.class, "dish", "restaurantId");
 
     public static final int MENU_ITEM_ID = 1;
     public static final int NOT_EXISTED_MENU_ITEM_ID = 20;
