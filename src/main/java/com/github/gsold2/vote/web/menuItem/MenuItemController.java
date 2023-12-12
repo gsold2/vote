@@ -3,6 +3,8 @@ package com.github.gsold2.vote.web.menuItem;
 import com.github.gsold2.vote.model.MenuItem;
 import com.github.gsold2.vote.repository.MenuItemRepository;
 import com.github.gsold2.vote.service.MenuItemService;
+import com.github.gsold2.vote.to.MenuItemTo;
+import com.github.gsold2.vote.util.MenuItemUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -41,10 +43,10 @@ public class MenuItemController {
     }
 
     @GetMapping("/filter")
-    public List<MenuItem> getAllByRestaurantAndDate(@RequestParam int restaurantId,
-                                                    @RequestParam LocalDate date) {
+    public List<MenuItemTo> getAllByRestaurantAndDate(@RequestParam int restaurantId,
+                                                      @RequestParam LocalDate date) {
         log.info("get all menu items for restaurant{} on date {}", restaurantId, date);
-        return menuItemRepository.getAllByRestaurantAndDate(restaurantId, date);
+        return MenuItemUtil.getTos(menuItemRepository.getAllByRestaurantAndDate(restaurantId, date));
     }
 
     @PutMapping(value = "/{id}")

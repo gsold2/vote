@@ -1,6 +1,7 @@
 package com.github.gsold2.vote.web.menuItem;
 
 import com.github.gsold2.vote.model.MenuItem;
+import com.github.gsold2.vote.to.MenuItemTo;
 import com.github.gsold2.vote.web.MatcherFactory;
 
 import java.time.LocalDate;
@@ -8,6 +9,7 @@ import java.util.List;
 
 public class MenuItemTestData {
     public static final MatcherFactory.Matcher<MenuItem> MENU_ITEM_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(MenuItem.class, "dish", "restaurantId");
+    public static final MatcherFactory.Matcher<MenuItemTo> MENU_ITEM_TO_MATCHER = MatcherFactory.usingEqualsComparator(MenuItemTo.class);
 
     public static final int MENU_ITEM_ID = 1;
     public static final int NOT_EXISTED_MENU_ITEM_ID = 20;
