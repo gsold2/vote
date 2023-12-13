@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.github.gsold2.vote.util.VoteUtil.getTos;
+import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.NOT_EXISTED_RESTAURANT_ID;
 import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.restaurant1;
 import static com.github.gsold2.vote.web.user.UserTestData.ADMIN_MAIL;
 import static com.github.gsold2.vote.web.user.UserTestData.USER_MAIL;
@@ -100,5 +101,25 @@ public class VoteControllerTest extends BaseVoteControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void updateNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("restaurantId", String.valueOf(restaurant1.id())))
+                .andDo(print())
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void updateInvalid() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("restaurantId", String.valueOf(NOT_EXISTED_RESTAURANT_ID)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 }

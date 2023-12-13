@@ -2,7 +2,6 @@ package com.github.gsold2.vote.repository;
 
 import com.github.gsold2.vote.error.AppException;
 import com.github.gsold2.vote.error.DataConflictException;
-import com.github.gsold2.vote.error.IllegalRequestDataException;
 import com.github.gsold2.vote.error.NotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

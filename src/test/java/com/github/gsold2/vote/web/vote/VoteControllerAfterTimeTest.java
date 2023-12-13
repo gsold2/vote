@@ -1,6 +1,6 @@
 package com.github.gsold2.vote.web.vote;
 
-import com.github.gsold2.vote.util.validation.TimeValidator;
+import com.github.gsold2.vote.util.validation.DateTimeValidator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalTime;
+import java.time.*;
 
 import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.restaurant1;
 import static com.github.gsold2.vote.web.user.UserTestData.ADMIN_MAIL;
@@ -20,16 +20,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class VoteControllerAfterTimeTest extends BaseVoteControllerTest {
 
     @Autowired
-    TimeValidator timeValidator;
+    DateTimeValidator dateTimeValidator;
 
     @BeforeEach
     void beforeEach() {
-        timeValidator.setLimitTimeForChange(LocalTime.now().getHour());
+        dateTimeValidator.setClock(Clock.fixed(Instant.parse(LocalDate.now() + "T11:00:01.00Z"), ZoneId.of("UTC")));
     }
 
     @AfterEach
     void afterEach() {
-        timeValidator.setLimitTimeForChange(TimeValidator.defaultLimitTimeForChange);
+        dateTimeValidator.setClock(Clock.systemDefaultZone());
     }
 
     @Test

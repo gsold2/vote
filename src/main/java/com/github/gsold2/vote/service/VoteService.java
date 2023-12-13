@@ -3,9 +3,8 @@ package com.github.gsold2.vote.service;
 import com.github.gsold2.vote.model.User;
 import com.github.gsold2.vote.model.Vote;
 import com.github.gsold2.vote.repository.RestaurantRepository;
-import com.github.gsold2.vote.repository.UserRepository;
 import com.github.gsold2.vote.repository.VoteRepository;
-import com.github.gsold2.vote.util.validation.TimeValidator;
+import com.github.gsold2.vote.util.validation.DateTimeValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @AllArgsConstructor
 public class VoteService {
-    private final TimeValidator timeValidator;
+    private final DateTimeValidator dateTimeValidator;
     private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
-    private final UserRepository userRepository;
 
     @Transactional
     public Vote save(User user, int restaurantId, Vote vote) {
@@ -28,7 +26,7 @@ public class VoteService {
     @Transactional
     public void update(int restaurantId, int userId) {
         Vote vote = voteRepository.getExistedUpToday(userId);
-        timeValidator.checkTime(vote);
+        dateTimeValidator.checkDateTime(vote);
         vote.setRestaurant(restaurantRepository.getOrThrowIllegalRequestDataException(restaurantId));
         voteRepository.save(vote);
     }
@@ -36,7 +34,7 @@ public class VoteService {
     @Transactional
     public void setRestaurantNull(int userId) {
         Vote vote = voteRepository.getExistedUpToday(userId);
-        timeValidator.checkTime(vote);
+        dateTimeValidator.checkDateTime(vote);
         vote.setRestaurant(null);
         voteRepository.save(vote);
     }

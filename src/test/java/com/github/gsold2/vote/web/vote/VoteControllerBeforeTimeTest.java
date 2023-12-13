@@ -1,7 +1,7 @@
 package com.github.gsold2.vote.web.vote;
 
 import com.github.gsold2.vote.model.Vote;
-import com.github.gsold2.vote.util.validation.TimeValidator;
+import com.github.gsold2.vote.util.validation.DateTimeValidator;
 import com.github.gsold2.vote.web.user.UserTestData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,13 +11,15 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalTime;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
-import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.*;
+import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.RESTAURANT_ID_MATCHER;
+import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.restaurant1;
 import static com.github.gsold2.vote.web.user.UserTestData.ADMIN_MAIL;
-import static com.github.gsold2.vote.web.user.UserTestData.USER_MAIL;
 import static com.github.gsold2.vote.web.vote.VoteController.REST_URL;
-import static com.github.gsold2.vote.web.vote.VoteTestData.getUpdated;
 import static com.github.gsold2.vote.web.vote.VoteTestData.*;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,16 +28,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
 
     @Autowired
-    TimeValidator timeValidator;
+    DateTimeValidator dateTimeValidator;
 
     @BeforeEach
     void beforeEach() {
-        timeValidator.setLimitTimeForChange(LocalTime.now().getHour() + 1);
+        dateTimeValidator.setClock(Clock.fixed(Instant.parse(LocalDate.now() + "T10:00:00.00Z"), ZoneId.of("UTC")));
     }
 
     @AfterEach
     void afterEach() {
-        timeValidator.setLimitTimeForChange(TimeValidator.defaultLimitTimeForChange);
+        dateTimeValidator.setClock(Clock.systemDefaultZone());
     }
 
     @Test
@@ -53,25 +55,6 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
         RESTAURANT_ID_MATCHER.assertMatch(existed.getRestaurant(), restaurant1);
     }
 
-    @Test
-    @WithUserDetails(value = USER_MAIL)
-    void updateNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("restaurantId", String.valueOf(restaurant1.id())))
-                .andDo(print())
-                .andExpect(status().isConflict());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void updateInvalid() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("restaurantId", String.valueOf(NOT_EXISTED_RESTAURANT_ID)))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
-    }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
