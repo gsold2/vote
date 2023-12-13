@@ -9,7 +9,6 @@ import java.util.List;
 
 public class MenuItemTestData {
     public static final MatcherFactory.Matcher<MenuItem> MENU_ITEM_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(MenuItem.class, "dish", "restaurantId");
-    public static final MatcherFactory.Matcher<MenuItemTo> MENU_ITEM_TO_MATCHER = MatcherFactory.usingEqualsComparator(MenuItemTo.class);
 
     public static final int MENU_ITEM_ID = 1;
     public static final int NOT_EXISTED_MENU_ITEM_ID = 20;

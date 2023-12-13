@@ -2,7 +2,6 @@ package com.github.gsold2.vote.web.menuItem;
 
 import com.github.gsold2.vote.model.MenuItem;
 import com.github.gsold2.vote.repository.MenuItemRepository;
-import com.github.gsold2.vote.util.MenuItemUtil;
 import com.github.gsold2.vote.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +69,7 @@ public class MenuItemControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MENU_ITEM_TO_MATCHER.contentJson(MenuItemUtil.getTos(menuItems)));
+                .andExpect(MENU_ITEM_MATCHER.contentJson(menuItems));
     }
 
     @Test
