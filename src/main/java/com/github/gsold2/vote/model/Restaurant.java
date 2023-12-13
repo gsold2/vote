@@ -1,6 +1,7 @@
 package com.github.gsold2.vote.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,7 +20,8 @@ public class Restaurant extends NamedEntity {
     @OneToMany(fetch = FetchType.LAZY)//, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("dateOfMenu DESC")
     @JoinColumn(name = "restaurant_id")
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Schema(hidden = true)
     private List<MenuItem> menuItems;
 
     public Restaurant(Integer id, String name) {
