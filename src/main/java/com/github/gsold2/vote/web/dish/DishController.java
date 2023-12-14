@@ -3,8 +3,6 @@ package com.github.gsold2.vote.web.dish;
 import com.github.gsold2.vote.model.Dish;
 import com.github.gsold2.vote.repository.DishRepository;
 import com.github.gsold2.vote.service.DishService;
-import com.github.gsold2.vote.to.DishTo;
-import com.github.gsold2.vote.util.DishUtil;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +35,9 @@ public class DishController {
     }
 
     @GetMapping
-    public List<DishTo> getAllByRestaurant(@RequestParam int restaurantId) {
+    public List<Dish> getAllByRestaurant(@RequestParam int restaurantId) {
         log.info("get all dishes for restaurant {}", restaurantId);
-        return DishUtil.getTos(dishRepository.getAllByRestaurant(restaurantId));
+        return dishRepository.getAllByRestaurant(restaurantId);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

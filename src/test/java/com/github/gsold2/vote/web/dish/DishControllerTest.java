@@ -2,7 +2,6 @@ package com.github.gsold2.vote.web.dish;
 
 import com.github.gsold2.vote.model.Dish;
 import com.github.gsold2.vote.repository.DishRepository;
-import com.github.gsold2.vote.util.DishUtil;
 import com.github.gsold2.vote.util.JsonUtil;
 import com.github.gsold2.vote.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
@@ -92,7 +91,7 @@ public class DishControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DISH_TO_MATCHER.contentJson(DishUtil.getTos(dishes)));
+                .andExpect(DISH_MATCHER.contentJson(dishes));
     }
 
     @Test

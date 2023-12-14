@@ -1,14 +1,12 @@
 package com.github.gsold2.vote.web.dish;
 
 import com.github.gsold2.vote.model.Dish;
-import com.github.gsold2.vote.to.DishTo;
 import com.github.gsold2.vote.web.MatcherFactory;
 
 import java.util.List;
 
 public class DishTestData {
     public static final MatcherFactory.Matcher<Dish> DISH_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Dish.class, "restaurant");
-    public static final MatcherFactory.Matcher<DishTo> DISH_TO_MATCHER = MatcherFactory.usingEqualsComparator(DishTo.class);
 
     public static final int DISH_ID = 1;
     public static final int NOT_EXISTED_DISH_ID = 10;
