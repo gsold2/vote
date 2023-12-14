@@ -1,7 +1,6 @@
 package com.github.gsold2.vote.web.menuItem;
 
 import com.github.gsold2.vote.model.MenuItem;
-import com.github.gsold2.vote.to.MenuItemTo;
 import com.github.gsold2.vote.web.MatcherFactory;
 
 import java.time.LocalDate;
