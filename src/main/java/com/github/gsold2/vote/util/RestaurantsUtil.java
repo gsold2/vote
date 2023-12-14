@@ -15,6 +15,6 @@ public class RestaurantsUtil {
     }
 
     public static RestaurantTo createTo(Restaurant restaurant) {
-        return new RestaurantTo(restaurant.getId(), restaurant.getName());
+        return new RestaurantTo(restaurant.getId(), restaurant.getName(), restaurant.getMenuItems());
     }
 }

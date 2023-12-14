@@ -35,16 +35,16 @@ public class RestaurantController {
     }
 
     @GetMapping(REST_URL)
-    public List<RestaurantTo> getAll() {
+    public List<Restaurant> getAll() {
         log.info("get all restaurants");
-        return RestaurantsUtil.getTos(repository.getAll());
+        return repository.getAll();
     }
 
     @GetMapping(value = {"/api/user/restaurants/with-menu-up-today", "/api/admin/restaurants/with-menu-up-today"})
     @Cacheable(value = "restaurants")
-    public List<Restaurant> getAllWithMenuUpToday() {
+    public List<RestaurantTo> getAllWithMenuUpToday() {
         log.info("get all restaurants with menu up today");
-        return repository.getAllWithMenuUpToday();
+        return RestaurantsUtil.getTos(repository.getAllWithMenuUpToday());
     }
 
     @PutMapping(REST_URL + "/{id}")

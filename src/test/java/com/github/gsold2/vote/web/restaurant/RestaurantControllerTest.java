@@ -91,7 +91,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_TO_MATCHER.contentJson(getTos(restaurants)));
+                .andExpect(RESTAURANT_MATCHER.contentJson(restaurants));
     }
 
     @Test
@@ -101,7 +101,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.contentJson(List.of(restaurant1)));
+                .andExpect(RESTAURANT_TO_MATCHER.contentJson(getTos(List.of(restaurant1))));
     }
 
     @Test
@@ -111,7 +111,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.contentJson(List.of(restaurant1)));
+                .andExpect(RESTAURANT_TO_MATCHER.contentJson(getTos(List.of(restaurant1))));
     }
 
     @Test
