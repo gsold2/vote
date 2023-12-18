@@ -26,8 +26,8 @@ public class MenuItemService {
     @Transactional
     @CacheEvict(value = "restaurants", allEntries = true)
     public void update(int dishId, int id) {
-        Dish dish = dishRepository.getOrThrowDataConflictException(dishId);
         MenuItem menuItem = menuItemRepository.getOrThrowNotFoundException(id);
+        Dish dish = dishRepository.getOrThrowDataConflictException(dishId);
         if (!Objects.equals(menuItem.getRestaurantId(), dish.getRestaurant().getId())) {
             throw new IllegalRequestDataException("Dish id=" + dishId + " doesn't have restaurantId=" + menuItem.getRestaurantId());
         }
