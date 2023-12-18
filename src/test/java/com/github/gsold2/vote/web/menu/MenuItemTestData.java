@@ -1,4 +1,4 @@
-package com.github.gsold2.vote.web.menuItem;
+package com.github.gsold2.vote.web.menu;
 
 import com.github.gsold2.vote.model.MenuItem;
 import com.github.gsold2.vote.web.MatcherFactory;

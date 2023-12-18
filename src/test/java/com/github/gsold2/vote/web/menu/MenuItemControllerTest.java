@@ -1,4 +1,4 @@
-package com.github.gsold2.vote.web.menuItem;
+package com.github.gsold2.vote.web.menu;
 
 import com.github.gsold2.vote.model.MenuItem;
 import com.github.gsold2.vote.repository.MenuItemRepository;
@@ -16,10 +16,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.github.gsold2.vote.web.dish.DishTestData.*;
-import static com.github.gsold2.vote.web.menuItem.MenuItemController.REST_URL;
-import static com.github.gsold2.vote.web.menuItem.MenuItemTestData.getNew;
-import static com.github.gsold2.vote.web.menuItem.MenuItemTestData.getUpdated;
-import static com.github.gsold2.vote.web.menuItem.MenuItemTestData.*;
+import static com.github.gsold2.vote.web.menu.MenuItemController.REST_URL;
+import static com.github.gsold2.vote.web.menu.MenuItemTestData.getNew;
+import static com.github.gsold2.vote.web.menu.MenuItemTestData.getUpdated;
+import static com.github.gsold2.vote.web.menu.MenuItemTestData.*;
 import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.restaurant1;
 import static com.github.gsold2.vote.web.restaurant.RestaurantTestData.restaurant2;
 import static com.github.gsold2.vote.web.user.UserTestData.ADMIN_MAIL;
