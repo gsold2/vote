@@ -51,7 +51,7 @@ public class VoteControllerTest extends BaseVoteControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void setRestaurantNullDataConflict() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "delete-restaurantId"))
+        perform(MockMvcRequestBuilders.delete(REST_URL))
                 .andExpect(status().isConflict());
     }
 

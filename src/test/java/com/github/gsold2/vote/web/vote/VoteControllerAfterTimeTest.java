@@ -45,7 +45,7 @@ public class VoteControllerAfterTimeTest extends BaseVoteControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void setRestaurantNullInvalidTime() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "delete-restaurantId"))
+        perform(MockMvcRequestBuilders.delete(REST_URL))
                 .andExpect(status().isUnprocessableEntity());
     }
 }

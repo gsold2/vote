@@ -59,7 +59,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void setRestaurantNullValidTime() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "delete-restaurantId"))
+        perform(MockMvcRequestBuilders.delete(REST_URL))
                 .andExpect(status().isNoContent());
         assertNull(voteRepository.get(UserTestData.ADMIN_ID, (VOTE_ID + 2)).get().getRestaurant());
     }
@@ -67,7 +67,7 @@ public class VoteControllerBeforeTimeTest extends BaseVoteControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void setRestaurantNullValidTimeAndThenUpdate() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + "delete-restaurantId"))
+        perform(MockMvcRequestBuilders.delete(REST_URL))
                 .andExpect(status().isNoContent());
 
         perform(MockMvcRequestBuilders.put(REST_URL)

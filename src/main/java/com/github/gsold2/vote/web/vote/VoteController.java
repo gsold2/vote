@@ -41,7 +41,7 @@ public class VoteController {
         return ResponseEntity.of(voteRepository.get(userId, id));
     }
 
-    @PutMapping("/delete-restaurantId")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void setRestaurantNull(@AuthenticationPrincipal AuthUser authUser) {
         int userId = authUser.id();
