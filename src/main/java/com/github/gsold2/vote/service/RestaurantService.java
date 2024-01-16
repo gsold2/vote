@@ -20,9 +20,9 @@ public class RestaurantService {
 
     @Transactional
     @CacheEvict(value = "restaurants", allEntries = true)
-    public void update(int id, String name) {
-        Restaurant restaurant = restaurantRepository.getOrThrowNotFoundException(id);
-        restaurant.setName(name);
-        restaurantRepository.save(restaurant);
+    public void update(int id, Restaurant restaurant) {
+        Restaurant existed = restaurantRepository.getOrThrowNotFoundException(id);
+        existed.setName(restaurant.getName());
+        restaurantRepository.save(existed);
     }
 }

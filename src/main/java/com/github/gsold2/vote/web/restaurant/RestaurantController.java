@@ -5,6 +5,7 @@ import com.github.gsold2.vote.repository.RestaurantRepository;
 import com.github.gsold2.vote.service.RestaurantService;
 import com.github.gsold2.vote.to.RestaurantTo;
 import com.github.gsold2.vote.util.RestaurantsUtil;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,6 +17,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+
+import static com.github.gsold2.vote.util.validation.ValidationUtil.assureIdConsistent;
+import static com.github.gsold2.vote.util.validation.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,15 +53,16 @@ public class RestaurantController {
 
     @PutMapping(REST_URL + "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestParam String name, @PathVariable int id) {
+    public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update {}", id);
-        service.update(id, name);
+        assureIdConsistent(restaurant, id);
+        service.update(id, restaurant);
     }
 
-    @PostMapping(REST_URL)
-    public ResponseEntity<Restaurant> createWithLocation(@RequestParam String name) {
-        Restaurant restaurant = new Restaurant(null, name);
+    @PostMapping(value = REST_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
         log.info("create {}", restaurant);
+        checkNew(restaurant);
         Restaurant created = service.create(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
