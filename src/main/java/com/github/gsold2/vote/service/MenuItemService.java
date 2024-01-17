@@ -24,7 +24,7 @@ public class MenuItemService {
     private final RestaurantRepository restaurantRepository;
 
     @Transactional
-    @CacheEvict(value = "restaurants", allEntries = true)
+    @CacheEvict(value = "restaurants", key = "'dateKeyGenerator'", allEntries = true)
     public void update(int dishId, int id) {
         MenuItem menuItem = menuItemRepository.getOrThrowNotFoundException(id);
         Dish dish = dishRepository.getOrThrowDataConflictException(dishId);
@@ -36,7 +36,7 @@ public class MenuItemService {
     }
 
     @Transactional
-    @CacheEvict(value = "restaurants", allEntries = true)
+    @CacheEvict(value = "restaurants", key = "'dateKeyGenerator'", allEntries = true)
     public MenuItem create(int dishId, MenuItem menuItem) {
         Dish existed = dishRepository.getOrThrowDataConflictException(dishId);
         menuItem.setDish(existed);
@@ -45,7 +45,7 @@ public class MenuItemService {
     }
 
     @Transactional
-    @CacheEvict(value = "restaurants", allEntries = true)
+    @CacheEvict(value = "restaurants", key = "'dateKeyGenerator'", allEntries = true)
     public List<MenuItem> copyUpToday(Integer restaurantId, LocalDate date) {
         restaurantRepository.getOrThrowDataConflictException(restaurantId);
         if (menuItemRepository.getAllByRestaurantAndDate(restaurantId, LocalDate.now()).size() > 0) {

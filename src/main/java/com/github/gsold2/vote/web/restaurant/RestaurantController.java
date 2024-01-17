@@ -45,7 +45,7 @@ public class RestaurantController {
     }
 
     @GetMapping(value = {"/api/user/restaurants/with-menu-up-today", "/api/admin/restaurants/with-menu-up-today"})
-    @Cacheable(value = "restaurants")
+    @Cacheable(value = "restaurants", key = "'dateKeyGenerator'")
     public List<RestaurantTo> getAllWithMenuUpToday() {
         log.info("get all restaurants with menu up today");
         return RestaurantsUtil.getTos(repository.getAllWithMenuUpToday());

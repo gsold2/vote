@@ -160,7 +160,6 @@ public class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(status().isConflict());
     }
 
-
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicate() throws Exception {

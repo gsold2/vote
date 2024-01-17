@@ -33,7 +33,7 @@ public class MenuItemController {
     }
 
     @DeleteMapping("/{id}")
-    @CacheEvict(value = "restaurants", allEntries = true)
+    @CacheEvict(value = "restaurants", key = "'dateKeyGenerator'", allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
